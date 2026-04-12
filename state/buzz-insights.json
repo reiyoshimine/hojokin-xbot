@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "lastUpdated": "2026-04-12T11:57:00.062Z",
-  "sampleSize": 99,
+  "lastUpdated": "2026-04-12T12:00:31.908Z",
+  "sampleSize": 126,
   "topHookPatterns": [
     {
       "pattern": "amount",
-      "weight": 0.7363351955307262,
+      "weight": 0.74951843575419,
       "avgEngagement": 1616.5,
       "count": 3,
       "examples": [
@@ -16,7 +16,7 @@
     },
     {
       "pattern": "urgency",
-      "weight": 0.5898880780775072,
+      "weight": 0.6004493500165022,
       "avgEngagement": 1295,
       "count": 3,
       "examples": [
@@ -27,7 +27,7 @@
     },
     {
       "pattern": "loss_aversion",
-      "weight": 0.9846040828951438,
+      "weight": 0.9699779616455304,
       "avgEngagement": 1118.75,
       "count": 2,
       "examples": [
@@ -37,7 +37,7 @@
     },
     {
       "pattern": "other",
-      "weight": 0.37548425973765653,
+      "weight": 0.38220687632083244,
       "avgEngagement": 824.3125,
       "count": 16,
       "examples": [
