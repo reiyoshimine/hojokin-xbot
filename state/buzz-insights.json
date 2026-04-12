@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "lastUpdated": "2026-04-12T10:21:42.416Z",
+  "sampleSize": 24,
+  "topHookPatterns": [
+    {
+      "pattern": "loss_aversion",
+      "weight": 1,
+      "avgEngagement": 2237.5,
+      "count": 1,
+      "examples": [
+        "知らないと損する補助金まとめ"
+      ]
+    },
+    {
+      "pattern": "amount",
+      "weight": 0.7224581005586592,
+      "avgEngagement": 1616.5,
+      "count": 3,
+      "examples": [
+        "補助額が変わってたのでお知らせ。",
+        "補助金で200万円もらえるのに、知らないってだけで自腹切ってる人が多すぎる。",
+        "1億円の補助金、存在するんですよね。"
+      ]
+    },
+    {
+      "pattern": "urgency",
+      "weight": 0.5787709497206703,
+      "avgEngagement": 1295,
+      "count": 3,
+      "examples": [
+        "補助上限250万円の制度、締切まであと18日。これは見逃したくない。",
+        "補助上限250万円の制度、締切まであと18日。これは見逃したくない。",
+        "あと3日で締切なのに、まだ知らない人がいるらしい。"
+      ]
+    },
+    {
+      "pattern": "other",
+      "weight": 0.3684078212290503,
+      "avgEngagement": 824.3125,
+      "count": 16,
+      "examples": [
+        "1/8（新着）",
+        "今週の補助金まとめ（4/5〜4/12）。",
+        "締切のアップデートが出てたのでお知らせ。"
+      ]
+    },
+    {
+      "pattern": "sharing",
+      "weight": 0,
+      "avgEngagement": 0,
+      "count": 1,
+      "examples": [
+        "前に紹介したやつ、締切が確定したので改めて共有。"
+      ]
+    }
+  ],
+  "topHashtags": [
+    {
+      "tag": "#中小企業支援",
+      "weight": 1,
+      "frequency": 0.041666666666666664,
+      "count": 1
+    },
+    {
+      "tag": "#開業医",
+      "weight": 0.7027928303459775,
+      "frequency": 0.041666666666666664,
+      "count": 1
+    },
+    {
+      "tag": "#クリニック開業",
+      "weight": 0.7027928303459775,
+      "frequency": 0.041666666666666664,
+      "count": 1
+    },
+    {
+      "tag": "#補助金",
+      "weight": 0.4460191746561067,
+      "frequency": 0.3333333333333333,
+      "count": 8
+    },
+    {
+      "tag": "#個人事業主",
+      "weight": 0.3108934278171461,
+      "frequency": 0.25,
+      "count": 6
+    },
+    {
+      "tag": "#中小企業",
+      "weight": 0.3108934278171461,
+      "frequency": 0.25,
+      "count": 6
+    },
+    {
+      "tag": "#札幌",
+      "weight": 0,
+      "frequency": 0.08333333333333333,
+      "count": 2
+    },
+    {
+      "tag": "#北海道",
+      "weight": 0,
+      "frequency": 0.08333333333333333,
+      "count": 2
+    },
+    {
+      "tag": "#助成金",
+      "weight": 0,
+      "frequency": 0.08333333333333333,
+      "count": 2
+    }
+  ],
+  "structureInsights": {
+    "optimalLineCount": [
+      5,
+      7
+    ],
+    "avgEmojiDensity": 0,
+    "ctaRate": 0.5
+  }
+}
