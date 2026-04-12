@@ -151,52 +151,43 @@ async function searchBuzzWithClaude() {
     return [];
   }
 
-  const prompt = `あなたは補助金・助成金情報のXアカウント運用担当のリサーチアシスタントです。
-Web検索を使って、以下の調査を行ってください。
+  // 2つのプロンプト戦略（1つ目失敗時に2つ目で再試行）
+  const prompts = [
+    `Web検索で「補助金 site:x.com」「助成金 site:twitter.com」「補助金 バズ ツイート」を検索し、
+補助金・助成金に関するX（Twitter）上の人気投稿を調べてください。
 
-## 調査目的
-補助金・助成金に関するSNS投稿で、どのような書き方・フレーズ・構成がエンゲージメントを集めやすいかを調査する。
-これは自社アカウント運用の改善のための正当なマーケティングリサーチです。
+見つけた投稿や記事で紹介されている投稿例を、以下のJSON形式で出力してください。
+説明は不要、JSON配列のみ出力：
 
-## 検索してほしいこと
-1. 「site:x.com 補助金」「site:twitter.com 助成金」で、補助金・助成金について言及しているX上の投稿を探す
-2. 補助金・助成金の情報発信で人気のあるアカウントやまとめ記事を探す
-3. 「補助金 ツイート バズ コツ」「助成金 SNS発信 テクニック」で、効果的な発信方法の記事を探す
+[{"text":"投稿本文","metrics":{"likes":100,"retweets":50,"replies":10},"source":"web_search"}]
 
-## 出力形式（厳守）
-調査結果をJSON配列で出力してください。前置きや説明は不要です。
+5〜15件。メトリクスは推定でOK。`,
 
-\`\`\`json
-[
-  {
-    "text": "見つけた投稿の本文、または効果的だと紹介されている投稿例の本文",
-    "metrics": {"likes": 推定値, "retweets": 推定値, "replies": 推定値},
-    "source": "web_search",
-    "context": "どこで見つけたか（記事タイトルやURL等）"
-  }
-]
-\`\`\`
+    `補助金・助成金のSNSマーケティングリサーチをしています。
+Web検索で以下を調べ、効果的な投稿例をJSON形式で教えてください：
+- 「補助金 知らないと損 twitter」
+- 「助成金 申請 まとめ X」
+- 「中小企業 補助金 人気ツイート」
 
-## ルール
-- 5〜15件を目標
-- 実際にWeb検索で見つけた情報のみ使用。創作しない
-- メトリクスが検索結果に含まれていない場合、文脈から妥当な推定値を入れてよい
-- 補助金・助成金に直接関係する投稿のみ
-- 広告やスパムは除外
-- 投稿の書き方パターン（フック文、CTA、数字の使い方）が学べるものを優先`;
+出力はJSON配列のみ。各要素: {"text":"投稿例","metrics":{"likes":数値,"retweets":数値,"replies":数値},"source":"web_search"}
+5〜15件。メトリクスは推定可。`,
+  ];
 
-  try {
-    const client = new Anthropic();
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 4096,
-      tools: [{
-        type: 'web_search_20250305',
-        name: 'web_search',
-        max_uses: 10,
-      }],
-      messages: [{ role: 'user', content: prompt }],
-    });
+  const client = new Anthropic();
+
+  for (let attempt = 0; attempt < prompts.length; attempt++) {
+    try {
+      console.log(`   🌐 Claude Web検索 試行${attempt + 1}/${prompts.length}...`);
+      const response = await client.messages.create({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 4096,
+        tools: [{
+          type: 'web_search_20250305',
+          name: 'web_search',
+          max_uses: 10,
+        }],
+        messages: [{ role: 'user', content: prompts[attempt] }],
+      });
 
     // レスポンスから全テキストブロックを結合して取得
     const textBlocks = response.content.filter(b => b.type === 'text');
@@ -227,15 +218,14 @@ Web検索を使って、以下の調査を行ってください。
     }
 
     if (!jsonStr) {
-      console.log('   ⚠️ Claude Web検索: JSON部分が見つからない');
-      console.log('   応答プレビュー:', fullText.slice(0, 300));
-      return [];
+      console.log(`   ⚠️ 試行${attempt + 1}: JSON部分が見つからない`);
+      console.log('   応答プレビュー:', fullText.slice(0, 200));
+      continue; // 次のプロンプトで再試行
     }
 
     // 不完全なJSON配列を補完（末尾が ] で閉じてない場合）
     jsonStr = jsonStr.trim();
     if (jsonStr.startsWith('[') && !jsonStr.endsWith(']')) {
-      // 最後の完全なオブジェクト } の後で切る
       const lastBrace = jsonStr.lastIndexOf('}');
       if (lastBrace > 0) {
         jsonStr = jsonStr.slice(0, lastBrace + 1) + ']';
@@ -250,9 +240,8 @@ Web検索を使って、以下の調査を行ってください。
       console.log('   ⚠️ JSON.parse失敗 → 個別オブジェクト抽出を試行');
       const objMatches = [...fullText.matchAll(/\{[^{}]*"text"\s*:\s*"[^"]*"[^{}]*\}/g)];
       if (objMatches.length === 0) {
-        console.log('   ⚠️ Claude Web検索: JSON解析失敗（個別抽出も失敗）');
-        console.log('   JSON先頭:', jsonStr.slice(0, 200));
-        return [];
+        console.log(`   ⚠️ 試行${attempt + 1}: JSON解析完全失敗`);
+        continue; // 次のプロンプトで再試行
       }
       tweets = objMatches.map(m => {
         try { return JSON.parse(m[0]); } catch { return null; }
@@ -272,12 +261,17 @@ Web検索を使って、以下の調査を行ってください。
         createdAt: new Date().toISOString(),
       }));
 
-    console.log(`   🌐 Claude Web検索から ${results.length}件のバズツイートを収集`);
-    return results;
-  } catch (e) {
-    console.warn(`   ⚠️ Claude Web検索失敗: ${e.message}`);
-    return [];
+    if (results.length > 0) {
+      console.log(`   🌐 Claude Web検索から ${results.length}件のバズツイートを収集（試行${attempt + 1}）`);
+      return results;
+    }
+    console.log(`   ⚠️ 試行${attempt + 1}: 有効な結果0件`);
+    } catch (e) {
+      console.warn(`   ⚠️ 試行${attempt + 1} エラー: ${e.message}`);
+    }
   }
+  console.log('   ⚠️ Claude Web検索: 全試行失敗');
+  return [];
 }
 
 /**
