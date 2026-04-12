@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "lastUpdated": "2026-04-12T10:40:40.909Z",
-  "sampleSize": 48,
+  "lastUpdated": "2026-04-12T11:06:29.273Z",
+  "sampleSize": 72,
   "topHookPatterns": [
     {
       "pattern": "loss_aversion",
