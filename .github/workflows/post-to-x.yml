@@ -21,6 +21,12 @@ on:
         default: 'false'
         type: choice
         options: ['true', 'false']
+      force_casual:
+        description: 'つぶやき投稿を強制'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['true', 'false']
 
 permissions:
   contents: write
@@ -70,6 +76,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '1' || '' }}
           FORCE_POST: ${{ github.event.inputs.force_post == 'true' && '1' || '' }}
+          FORCE_CASUAL: ${{ github.event.inputs.force_casual == 'true' && '1' || '' }}
         run: node scripts/post-new-subsidies.js
 
       - name: 状態ファイルをコミット（同日内重複防止用）

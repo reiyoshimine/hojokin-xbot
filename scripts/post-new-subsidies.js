@@ -29,6 +29,8 @@ const GENERATE_SCRIPT = resolve(__dirname, 'generate-tweet.js');
 const DRY_RUN = process.env.DRY_RUN === '1';
 const FORCE_DAILY_PICK = process.env.FORCE_DAILY_PICK === '1';
 const FORCE_POST = process.env.FORCE_POST === '1'; // 同日重複ガードを無視（テスト用）
+const CASUAL_RATE = parseFloat(process.env.CASUAL_RATE || '0.2'); // つぶやき投稿の確率（デフォ20%）
+const FORCE_CASUAL = process.env.FORCE_CASUAL === '1'; // つぶやき投稿を強制
 
 /**
  * 文字列ハッシュ（バリエーション選択用）
@@ -473,11 +475,48 @@ async function main() {
   }
   const best = candidates[0];
 
-  console.log(`\n👉 投稿対象: [${best.type}] ${best.subsidy.title}`);
+  // つぶやき投稿の判定（新規/更新がある時はスキップ、ピックアップ日のみ対象）
+  const doCasual = FORCE_CASUAL || (
+    best.type === 'daily'
+    && added.length === 0
+    && updated.length === 0
+    && process.env.ANTHROPIC_API_KEY
+    && Math.random() < CASUAL_RATE
+  );
 
-  // Claude AI でバズ文章を生成（失敗時はテンプレートにフォールバック）
   let text = null;
-  if (process.env.ANTHROPIC_API_KEY) {
+  let isCasual = false;
+
+  if (doCasual) {
+    console.log('\n💬 今日はつぶやき投稿モード（中の人ツイート）');
+    try {
+      const input = JSON.stringify({
+        type: 'casual',
+        subsidy: best.subsidy, // 参考情報として渡す
+      });
+      execFileSync('node', [GENERATE_SCRIPT, input], {
+        encoding: 'utf-8',
+        timeout: 30_000,
+        env: { ...process.env },
+        stdio: ['pipe', 'inherit', 'inherit'],
+      });
+      const draft = JSON.parse(await readFile(DRAFT_FILE, 'utf-8'));
+      if (draft.text && tweetDisplayLen(draft.text) <= 280) {
+        text = draft.text;
+        isCasual = true;
+        console.log('   ✅ つぶやきテキスト採用');
+      }
+    } catch (e) {
+      console.log(`   ⚠️ つぶやき生成失敗 → 通常投稿にフォールバック: ${e.message || ''}`);
+    }
+  }
+
+  if (!isCasual) {
+    console.log(`\n👉 投稿対象: [${best.type}] ${best.subsidy.title}`);
+  }
+
+  // Claude AI でバズ文章を生成（つぶやきでない場合、失敗時はテンプレートにフォールバック）
+  if (!text && process.env.ANTHROPIC_API_KEY) {
     try {
       console.log('   🧠 Claude AI でツイート生成中...');
       const input = JSON.stringify({ type: best.type, subsidy: best.subsidy });
@@ -495,7 +534,7 @@ async function main() {
     } catch (e) {
       console.log(`   ⚠️ Claude AI 生成失敗（テンプレートにフォールバック）: ${e.message || 'exit code ' + e.status}`);
     }
-  } else {
+  } else if (!text) {
     console.log('   🧠 ANTHROPIC_API_KEY 未設定 → テンプレートモードで動作');
   }
 
@@ -586,11 +625,12 @@ async function main() {
   }
 
   // 状態ファイル更新
+  const postType = isCasual ? 'casual' : best.type;
   await writeStateFile({
     lastDate: today,
-    lastSubsidyId: best.subsidy.id,
-    lastType: best.type,
-    lastTitle: best.subsidy.title,
+    lastSubsidyId: isCasual ? 'casual-tweet' : best.subsidy.id,
+    lastType: postType,
+    lastTitle: isCasual ? 'つぶやき' : best.subsidy.title,
     lastTweetId: tweetId,
     lastPostedAt: new Date().toISOString(),
   });
@@ -599,8 +639,8 @@ async function main() {
   // 投稿履歴に追加
   await appendHistory({
     date: today,
-    type: best.type,
-    title: best.subsidy.title,
+    type: postType,
+    title: isCasual ? 'つぶやき' : best.subsidy.title,
     text,
     tweetId,
     postedAt: new Date().toISOString(),

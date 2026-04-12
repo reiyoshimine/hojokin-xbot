@@ -67,6 +67,81 @@ async function main() {
     type === 'update' && subsidy.oldAmount ? `旧金額: ${subsidy.oldAmount}` : null,
   ].filter(Boolean).join('\n');
 
+  // つぶやきモード（casual）は完全に別プロンプト
+  if (type === 'casual') {
+    const casualPrompt = `あなたは補助金情報のXアカウント @japanhojokin を運営している「中の人」だ。
+今日は補助金の紹介ではなく、**普通のつぶやき**を投稿する。
+
+## あなたのキャラ設定
+- 補助金や助成金に詳しい。中小企業や個人事業主を応援している
+- 普段は補助金情報を発信しているが、たまに中の人としての素を見せる
+- フレンドリーで親近感がある。上から目線じゃない
+- 補助金の申請代行業者ではなく、純粋に情報発信が好きでやっている
+- たまにぼやく、たまに熱くなる、たまにちょっと面白いことを言う
+
+## つぶやきのジャンル（どれか1つ選んで書け）
+- 補助金申請あるある（「締切前日にサーバー落ちるの本当にやめてほしい」系）
+- 中の人の日常（「今日も新しい補助金がないかチェックしてる。これが日課」系）
+- フォロワーへの語りかけ（「補助金で人生変わったって報告もらうとこっちが嬉しくなる」系）
+- 業界の小ネタ・豆知識（「実は補助金って年間で○千種類以上あるらしい」系）
+- 季節や時事に絡めた一言（「年度末は補助金ラッシュ。今のうちにチェックしておくと吉」系）
+- 自分のアカウント運営に関する一言（「フォロワー増えてきて嬉しい」「どんな情報が欲しいか教えて」系）
+- 軽い問いかけ（「みんな補助金の情報ってどこで知った？」系）
+
+## 直近の補助金ネタ（参考程度に。使わなくてもいい）
+${subsidy.title}${subsidy.amount ? `（${subsidy.amount}）` : ''}
+
+## 過去の自分の投稿（雰囲気の参考 & 被り回避）
+${recentPosts || '（履歴なし）'}
+
+## バズった投稿の例（トーンの参考に）
+${buzzExamples || '（なし）'}
+
+## ルール（厳守）
+1. 280文字以内
+2. 補助金の紹介・宣伝をするな。あくまで「つぶやき」だ
+3. 口語体。友達に話すくらいのカジュアルさ
+4. 「〜です」「〜ます」NG。「〜だ」「〜なんだよね」「〜だよな」「〜かも」くらいの温度感
+5. 絵文字は使うな
+6. ハッシュタグは0〜1個（なくてもいい）
+7. URLは入れるな
+8. 宣伝っぽさゼロ。botっぽさゼロ。人間味100%
+9. 過去の投稿と被らない表現にしろ
+10. 短くていい。1〜3文程度。つぶやきだから長い必要はない
+
+## 出力
+ツイート本文のみ。説明・前置き・補足は一切不要。`;
+
+    const client = new Anthropic();
+    const response = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 300,
+      messages: [{ role: 'user', content: casualPrompt }],
+    });
+
+    const finalText = response.content[0].text.trim();
+    const displayLen = tweetDisplayLen(finalText);
+
+    if (displayLen > 280) {
+      console.warn(`⚠️ つぶやきが${displayLen}文字（280超過）→ フォールバック`);
+      process.exit(2);
+    }
+
+    console.log(`\n=== Claude生成つぶやき (${displayLen}文字) ===\n`);
+    console.log(finalText);
+
+    await mkdir(STATE_DIR, { recursive: true });
+    await writeFile(DRAFT_FILE, JSON.stringify({
+      generatedAt: new Date().toISOString(),
+      type: 'casual',
+      subsidyTitle: null,
+      text: finalText,
+      displayLen,
+    }, null, 2) + '\n', 'utf-8');
+    console.log(`\n💾 保存: ${DRAFT_FILE}`);
+    return;
+  }
+
   const typeLabel = type === 'new' ? '新規補助金の告知' : type === 'update' ? '補助金の更新情報' : '今日のピックアップ紹介';
 
   const prompt = `あなたは補助金情報のXアカウント @japanhojokin の中の人だ。
