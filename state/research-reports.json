@@ -366,5 +366,79 @@
     },
     "ownPerformance": null,
     "summary": "最も効果的なフック: 金額インパクト系（重み0.76）。2位: 締切カウントダウン系（重み0.61）。推奨ハッシュタグ: #中小企業支援 #開業医 #クリニック開業"
+  },
+  {
+    "date": "2026-04-12T12:08:08.003Z",
+    "sources": {
+      "webSearch": 10,
+      "seeds": 10,
+      "ownApi": 17,
+      "search": 0,
+      "history": 4,
+      "total": 37
+    },
+    "hookRanking": [
+      {
+        "pattern": "urgency",
+        "weight": 0.63,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.77,
+        "count": 4,
+        "example": "補助金採択件数200件以上、累計獲得額20億円超。"
+      },
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.94,
+        "count": 3,
+        "example": "【知らないと損】Xでバズる投稿には共通点がある。"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.39,
+        "count": 24,
+        "example": "／ デジタル化・AI導入補助金（旧 IT導入補助金）申請受付開始 ＼"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0,
+        "count": 2,
+        "example": "新しく出てきた一件、これは結構良さそう。"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#中小企業支援",
+        "weight": 1
+      },
+      {
+        "tag": "#開業医",
+        "weight": 0.7
+      },
+      {
+        "tag": "#クリニック開業",
+        "weight": 0.7
+      },
+      {
+        "tag": "#補助金",
+        "weight": 0.45
+      },
+      {
+        "tag": "#個人事業主",
+        "weight": 0.31
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        5,
+        6
+      ],
+      "ctaRate": 44
+    },
+    "ownPerformance": null,
+    "summary": "最も効果的なフック: 締切カウントダウン系（重み0.63）。2位: 金額インパクト系（重み0.77）。推奨ハッシュタグ: #中小企業支援 #開業医 #クリニック開業"
   }
 ]
