@@ -481,19 +481,36 @@ async function main() {
   await writeJson(REPORTS_FILE, reports);
   console.log(`📜 レポート保存: ${REPORTS_FILE} (計${reports.length}件)`);
 
-  // バズツイート コレクション蓄積（毎回トップ5を保存）
-  const ranked = allTweets
-    .filter(t => t.text && t.metrics)
+  // バズツイート コレクション蓄積
+  // Web検索で見つけた新しいツイートを優先的に保存（手動シードは既にコレクション済みのため）
+  const collection = (await readJson(COLLECTION_FILE)) || [];
+  const existingTexts = new Set(
+    collection.flatMap(c => (c.tweets || []).map(t => t.text?.slice(0, 50)))
+  );
+
+  // Web検索の新規ツイートを最優先
+  const newWebTweets = webSearchTweets
+    .filter(t => t.text && t.metrics && !existingTexts.has(t.text?.slice(0, 50)))
     .map(t => ({ ...t, score: engagementScore(t.metrics) }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 5);
 
-  if (ranked.length > 0) {
-    const collection = (await readJson(COLLECTION_FILE)) || [];
-    const existingTexts = new Set(collection.map(c => c.text?.slice(0, 50)));
+  // 残りスロットをその他ソースの新規ツイートで埋める
+  const remaining = 5 - newWebTweets.length;
+  const otherNew = remaining > 0
+    ? allTweets
+        .filter(t => t.text && t.metrics && t.source !== 'web_search' && !existingTexts.has(t.text?.slice(0, 50)))
+        .map(t => ({ ...t, score: engagementScore(t.metrics) }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, remaining)
+    : [];
+
+  const batchTweets = [...newWebTweets, ...otherNew];
+
+  if (batchTweets.length > 0) {
     const batch = {
       collectedAt: new Date().toISOString(),
-      tweets: ranked.map(t => ({
+      tweets: batchTweets.map(t => ({
         text: t.text,
         source: t.source,
         score: t.score,
@@ -502,17 +519,14 @@ async function main() {
         createdAt: t.createdAt || null,
       })),
     };
-    // 重複テキストは除外しつつバッチ追加
-    batch.tweets = batch.tweets.filter(t => !existingTexts.has(t.text?.slice(0, 50)));
-    if (batch.tweets.length > 0) {
-      collection.push(batch);
-      // 最大50バッチ（250ツイート相当）を保持
-      while (collection.length > 50) collection.shift();
-      await writeJson(COLLECTION_FILE, collection);
-      console.log(`🏆 バズコレクション保存: ${batch.tweets.length}件追加 (累計${collection.length}バッチ)`);
-    } else {
-      console.log('🏆 バズコレクション: 新規ツイートなし');
-    }
+    collection.push(batch);
+    // 最大50バッチを保持
+    while (collection.length > 50) collection.shift();
+    await writeJson(COLLECTION_FILE, collection);
+    console.log(`🏆 バズコレクション保存: ${batch.tweets.length}件追加（Web検索${newWebTweets.length}/他${otherNew.length}）累計${collection.length}バッチ`);
+  } else {
+    console.log('🏆 バズコレクション: 新規ツイートなし');
+  }
   }
 
   console.log('🎉 バズリサーチ完了');
