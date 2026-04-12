@@ -1,20 +1,11 @@
 {
   "version": 1,
-  "lastUpdated": "2026-04-12T11:06:29.273Z",
-  "sampleSize": 72,
+  "lastUpdated": "2026-04-12T11:57:00.062Z",
+  "sampleSize": 99,
   "topHookPatterns": [
     {
-      "pattern": "loss_aversion",
-      "weight": 1,
-      "avgEngagement": 2237.5,
-      "count": 1,
-      "examples": [
-        "知らないと損する補助金まとめ"
-      ]
-    },
-    {
       "pattern": "amount",
-      "weight": 0.7224581005586592,
+      "weight": 0.7363351955307262,
       "avgEngagement": 1616.5,
       "count": 3,
       "examples": [
@@ -25,7 +16,7 @@
     },
     {
       "pattern": "urgency",
-      "weight": 0.5787709497206703,
+      "weight": 0.5898880780775072,
       "avgEngagement": 1295,
       "count": 3,
       "examples": [
@@ -35,14 +26,34 @@
       ]
     },
     {
+      "pattern": "loss_aversion",
+      "weight": 0.9846040828951438,
+      "avgEngagement": 1118.75,
+      "count": 2,
+      "examples": [
+        "開業1年以内の人、これ知らないと純粋にもったいない。",
+        "知らないと損する補助金まとめ"
+      ]
+    },
+    {
       "pattern": "other",
-      "weight": 0.3684078212290503,
+      "weight": 0.37548425973765653,
       "avgEngagement": 824.3125,
       "count": 16,
       "examples": [
         "1/8（新着）",
         "今週の補助金まとめ（4/5〜4/12）。",
         "締切のアップデートが出てたのでお知らせ。"
+      ]
+    },
+    {
+      "pattern": "novelty",
+      "weight": 0,
+      "avgEngagement": 0,
+      "count": 2,
+      "examples": [
+        "新しく出てきた一件、これは結構良さそう。",
+        "新しく出てきた一件、これは結構良さそう。"
       ]
     },
     {
@@ -59,55 +70,55 @@
     {
       "tag": "#中小企業支援",
       "weight": 1,
-      "frequency": 0.041666666666666664,
+      "frequency": 0.037037037037037035,
       "count": 1
     },
     {
       "tag": "#開業医",
       "weight": 0.7027928303459775,
-      "frequency": 0.041666666666666664,
+      "frequency": 0.037037037037037035,
       "count": 1
     },
     {
       "tag": "#クリニック開業",
       "weight": 0.7027928303459775,
-      "frequency": 0.041666666666666664,
+      "frequency": 0.037037037037037035,
       "count": 1
     },
     {
       "tag": "#補助金",
       "weight": 0.4460191746561067,
-      "frequency": 0.3333333333333333,
+      "frequency": 0.2962962962962963,
       "count": 8
     },
     {
       "tag": "#個人事業主",
       "weight": 0.3108934278171461,
-      "frequency": 0.25,
+      "frequency": 0.2222222222222222,
       "count": 6
     },
     {
       "tag": "#中小企業",
       "weight": 0.3108934278171461,
-      "frequency": 0.25,
+      "frequency": 0.2222222222222222,
       "count": 6
     },
     {
       "tag": "#札幌",
       "weight": 0,
-      "frequency": 0.08333333333333333,
+      "frequency": 0.07407407407407407,
       "count": 2
     },
     {
       "tag": "#北海道",
       "weight": 0,
-      "frequency": 0.08333333333333333,
+      "frequency": 0.07407407407407407,
       "count": 2
     },
     {
       "tag": "#助成金",
       "weight": 0,
-      "frequency": 0.08333333333333333,
+      "frequency": 0.07407407407407407,
       "count": 2
     }
   ],
