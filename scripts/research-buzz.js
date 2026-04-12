@@ -207,23 +207,51 @@ Web検索を使って、以下の調査を行ってください。
 
     const fullText = textBlocks.map(b => b.text).join('\n');
 
-    // JSON部分を抽出（```json ... ``` やプレーンJSON両方に対応）
-    const jsonMatch = fullText.match(/```(?:json)?\s*([\s\S]*?)```/) || fullText.match(/(\[[\s\S]*\])/);
-    if (!jsonMatch) {
-      console.log('   ⚠️ Claude Web検索: JSON解析失敗');
-      console.log('   応答プレビュー:', fullText.slice(0, 200));
+    // JSON部分を抽出（複数パターンに対応）
+    let jsonStr = null;
+
+    // パターン1: ```json ... ``` （閉じあり）
+    const fenced = fullText.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (fenced) jsonStr = fenced[1];
+
+    // パターン2: ```json ... （閉じなし＝レスポンス途中切れ）
+    if (!jsonStr) {
+      const openFence = fullText.match(/```(?:json)?\s*([\s\S]*)/);
+      if (openFence) jsonStr = openFence[1];
+    }
+
+    // パターン3: プレーンJSON配列
+    if (!jsonStr) {
+      const rawArr = fullText.match(/(\[[\s\S]*\])/);
+      if (rawArr) jsonStr = rawArr[1];
+    }
+
+    if (!jsonStr) {
+      console.log('   ⚠️ Claude Web検索: JSON部分が見つからない');
+      console.log('   応答プレビュー:', fullText.slice(0, 300));
       return [];
     }
 
-    const jsonStr = jsonMatch[1] || jsonMatch[0];
+    // 不完全なJSON配列を補完（末尾が ] で閉じてない場合）
+    jsonStr = jsonStr.trim();
+    if (jsonStr.startsWith('[') && !jsonStr.endsWith(']')) {
+      // 最後の完全なオブジェクト } の後で切る
+      const lastBrace = jsonStr.lastIndexOf('}');
+      if (lastBrace > 0) {
+        jsonStr = jsonStr.slice(0, lastBrace + 1) + ']';
+      }
+    }
+
     let tweets;
     try {
       tweets = JSON.parse(jsonStr);
     } catch {
       // JSONが不完全な場合のフォールバック: 個別オブジェクトを抽出
-      const objMatches = [...fullText.matchAll(/\{[^{}]*"text"\s*:\s*"[^"]+[^{}]*\}/g)];
+      console.log('   ⚠️ JSON.parse失敗 → 個別オブジェクト抽出を試行');
+      const objMatches = [...fullText.matchAll(/\{[^{}]*"text"\s*:\s*"[^"]*"[^{}]*\}/g)];
       if (objMatches.length === 0) {
         console.log('   ⚠️ Claude Web検索: JSON解析失敗（個別抽出も失敗）');
+        console.log('   JSON先頭:', jsonStr.slice(0, 200));
         return [];
       }
       tweets = objMatches.map(m => {
