@@ -70,7 +70,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ -f state/posted.json ]; then
-            git add state/posted.json
+            git add state/posted.json state/history.json
             if ! git diff --cached --quiet; then
               git commit -m "X bot 状態更新 [skip ci]"
               git push
