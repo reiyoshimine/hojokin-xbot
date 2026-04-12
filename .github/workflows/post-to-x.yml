@@ -61,35 +61,13 @@ jobs:
       - name: 依存パッケージをインストール
         run: npm install --no-audit --no-fund
 
-      - name: 投稿候補を選出
-        env:
-          DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '1' || '' }}
-          FORCE_POST: ${{ github.event.inputs.force_post == 'true' && '1' || '' }}
-        run: node scripts/post-new-subsidies.js --select
-
-      - name: Claude AIでバズツイート生成
-        if: ${{ hashFiles('state/candidate.json') != '' }}
-        uses: anthropics/claude-code-action@beta
-        with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          direct_prompt: |
-            以下の手順でバズるツイートを生成してください。
-
-            1. `node scripts/generate-tweet.js` を実行してプロンプトを確認
-            2. そのプロンプトの指示に従い、バズるツイート本文を1つだけ生成
-            3. 生成したツイート本文を state/claude-draft.json に以下の形式で保存:
-               {"generatedAt":"ISO日時","text":"ツイート本文","model":"claude-sonnet"}
-            4. 必ず280文字以内に収めること（URLは23文字換算）
-
-            ツイート本文だけを生成してください。説明や前置きは不要です。
-
-      - name: ツイートを投稿
-        if: ${{ hashFiles('state/candidate.json') != '' }}
+      - name: 新規/更新ポストを実行
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
           X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
           X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '1' || '' }}
           FORCE_POST: ${{ github.event.inputs.force_post == 'true' && '1' || '' }}
         run: node scripts/post-new-subsidies.js

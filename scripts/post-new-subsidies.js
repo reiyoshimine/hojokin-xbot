@@ -1,7 +1,7 @@
 // 補助金XBot - 新規/更新ポスト
 // git diff から index.html の旧版と新版を取得し、新規/更新を検出して X に投稿
 
-import { execSync } from 'node:child_process';
+import { execSync, execFileSync } from 'node:child_process';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -25,9 +25,8 @@ const STATE_FILE = resolve(STATE_DIR, 'posted.json');
 const HISTORY_FILE = resolve(STATE_DIR, 'history.json');
 const INSIGHTS_FILE = resolve(STATE_DIR, 'buzz-insights.json');
 const DRAFT_FILE = resolve(STATE_DIR, 'claude-draft.json');
-const CANDIDATE_FILE = resolve(STATE_DIR, 'candidate.json');
+const GENERATE_SCRIPT = resolve(__dirname, 'generate-tweet.js');
 const DRY_RUN = process.env.DRY_RUN === '1';
-const SELECT_ONLY = process.argv.includes('--select');
 const FORCE_DAILY_PICK = process.env.FORCE_DAILY_PICK === '1';
 const FORCE_POST = process.env.FORCE_POST === '1'; // 同日重複ガードを無視（テスト用）
 
@@ -476,31 +475,28 @@ async function main() {
 
   console.log(`\n👉 投稿対象: [${best.type}] ${best.subsidy.title}`);
 
-  // --select モード: 候補をファイルに保存して終了（Claude生成ステップ用）
-  if (SELECT_ONLY) {
-    await mkdir(STATE_DIR, { recursive: true });
-    await writeFile(CANDIDATE_FILE, JSON.stringify({
-      type: best.type,
-      subsidy: best.subsidy,
-      selectedAt: new Date().toISOString(),
-    }, null, 2) + '\n', 'utf-8');
-    console.log(`💾 候補保存: ${CANDIDATE_FILE}`);
-    console.log('   → claude-code-action でツイート生成後、再実行してください');
-    return;
-  }
-
-  // Claude生成ドラフトがあれば優先使用
+  // Claude AI でバズ文章を生成（失敗時はテンプレートにフォールバック）
   let text = null;
-  try {
-    const draft = JSON.parse(await readFile(DRAFT_FILE, 'utf-8'));
-    if (draft.text && tweetDisplayLen(draft.text) <= 280) {
-      text = draft.text;
-      console.log('   ✅ Claude AI 生成テキスト採用');
-    } else if (draft.text) {
-      console.log(`   ⚠️ Claude生成テキストが${tweetDisplayLen(draft.text)}文字（280超過）→ テンプレートにフォールバック`);
+  if (process.env.ANTHROPIC_API_KEY) {
+    try {
+      console.log('   🧠 Claude AI でツイート生成中...');
+      const input = JSON.stringify({ type: best.type, subsidy: best.subsidy });
+      execFileSync('node', [GENERATE_SCRIPT, input], {
+        encoding: 'utf-8',
+        timeout: 30_000,
+        env: { ...process.env },
+        stdio: ['pipe', 'inherit', 'inherit'],
+      });
+      const draft = JSON.parse(await readFile(DRAFT_FILE, 'utf-8'));
+      if (draft.text && tweetDisplayLen(draft.text) <= 280) {
+        text = draft.text;
+        console.log('   ✅ Claude AI 生成テキスト採用');
+      }
+    } catch (e) {
+      console.log(`   ⚠️ Claude AI 生成失敗（テンプレートにフォールバック）: ${e.message || 'exit code ' + e.status}`);
     }
-  } catch {
-    console.log('   🧠 Claude生成ドラフトなし → テンプレートモードで動作');
+  } else {
+    console.log('   🧠 ANTHROPIC_API_KEY 未設定 → テンプレートモードで動作');
   }
 
   // テンプレートフォールバック
