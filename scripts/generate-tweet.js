@@ -24,8 +24,8 @@ function tweetDisplayLen(text) {
 }
 
 async function main() {
-  const { type, subsidy } = JSON.parse(process.argv[2]);
-  console.log(`🤖 Claude AIツイート生成: [${type}] ${subsidy.title}`);
+  const { type, subsidy, retryHint } = JSON.parse(process.argv[2]);
+  console.log(`🤖 Claude AIツイート生成: [${type}] ${subsidy.title}${retryHint ? ' (リトライ)' : ''}`);
 
   const [collection, insights, history] = await Promise.all([
     readJson(resolve(STATE_DIR, 'buzz-collection.json')),
@@ -101,7 +101,7 @@ ${recentPosts || '（履歴なし）'}
 11. HTMLタグは使わない。プレーンテキストのみ
 
 ## 出力形式
-ツイート本文だけを出力してください。説明や前置きは不要です。`;
+ツイート本文だけを出力してください。説明や前置きは不要です。${retryHint ? `\n\n## 重要な追加指示\n${retryHint}` : ''}`;
 
   const client = new Anthropic();
   const response = await client.messages.create({

@@ -514,19 +514,76 @@ async function main() {
   }
 
   const client = getClient();
+
+  // 投稿試行（403時はテキストを変えてリトライ）
+  const MAX_RETRY = 3;
   let tweetId = null;
-  try {
-    const res = await client.v2.tweet(text);
-    tweetId = res.data.id;
-    console.log(`✅ 投稿成功: ${best.subsidy.title} → tweet ${tweetId}`);
-  } catch (e) {
-    console.error(`❌ 投稿失敗:`, e.message || e);
-    if (e.data) console.error('API response data:', JSON.stringify(e.data, null, 2));
-    if (e.errors) console.error('API errors:', JSON.stringify(e.errors, null, 2));
-    if (e.code) console.error('Error code:', e.code);
-    if (e.rateLimit) console.error('Rate limit:', JSON.stringify(e.rateLimit, null, 2));
-    // twitter-api-v2 stores full response in e.data or e
-    try { console.error('Full error:', JSON.stringify(e, null, 2)); } catch {}
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= MAX_RETRY; attempt++) {
+    try {
+      const res = await client.v2.tweet(text);
+      tweetId = res.data.id;
+      console.log(`✅ 投稿成功: ${best.subsidy.title} → tweet ${tweetId}`);
+      break;
+    } catch (e) {
+      lastError = e;
+      const code = e.code || e.status || (e.data && e.data.status);
+      console.error(`❌ 投稿失敗 (試行${attempt}/${MAX_RETRY}): code=${code} ${e.message || ''}`);
+
+      if (code === 403 && attempt < MAX_RETRY) {
+        console.log(`   🔄 403リジェクト → 別のテキストで再試行...`);
+
+        if (attempt === 1 && process.env.ANTHROPIC_API_KEY) {
+          // 1回目失敗: Claudeに「前回と違う表現で」と再生成を依頼
+          try {
+            const input = JSON.stringify({
+              type: best.type,
+              subsidy: best.subsidy,
+              retryHint: `前回「${text.split('\n')[0]}」で投稿が拒否された。完全に違うフックと構成で書き直して。URLも省略してよい。`,
+            });
+            execFileSync('node', [GENERATE_SCRIPT, input], {
+              encoding: 'utf-8',
+              timeout: 30_000,
+              env: { ...process.env },
+              stdio: ['pipe', 'inherit', 'inherit'],
+            });
+            const draft = JSON.parse(await readFile(DRAFT_FILE, 'utf-8'));
+            if (draft.text && tweetDisplayLen(draft.text) <= 280) {
+              text = draft.text;
+              console.log(`   🧠 Claude再生成テキスト採用`);
+              continue;
+            }
+          } catch {
+            console.log(`   ⚠️ Claude再生成失敗`);
+          }
+        }
+
+        // テンプレートフォールバック（別バリアントを選ぶ）
+        const fallbackKey = best.subsidy.id + ':retry' + attempt;
+        if (best.type === 'new') text = buildNewPost(best.subsidy, insights);
+        else if (best.type === 'update') text = buildUpdatePost(best.subsidy);
+        else text = buildDailyPickPost(best.subsidy, insights);
+        // URLを除去してリトライ（URLが403の原因になりやすい）
+        if (attempt >= 2) {
+          text = text.replace(/\nhttps?:\/\/\S+/g, '');
+          text = clipToTweet(text);
+        }
+        console.log(`   📝 テンプレートフォールバック (attempt ${attempt + 1})`);
+        continue;
+      }
+
+      // 403以外 or リトライ上限 → 失敗終了
+      if (e.data) console.error('API response data:', JSON.stringify(e.data, null, 2));
+      if (e.rateLimit) console.error('Rate limit:', JSON.stringify(e.rateLimit, null, 2));
+      try { console.error('Full error:', JSON.stringify(e, null, 2)); } catch {}
+      process.exit(1);
+    }
+  }
+
+  if (!tweetId) {
+    console.error('❌ 全リトライ失敗');
+    try { console.error('Last error:', JSON.stringify(lastError, null, 2)); } catch {}
     process.exit(1);
   }
 
