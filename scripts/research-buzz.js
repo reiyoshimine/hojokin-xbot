@@ -13,6 +13,7 @@ const __dirname = dirname(__filename);
 const REPO_ROOT = resolve(__dirname, '..');
 const STATE_DIR = resolve(REPO_ROOT, 'state');
 const INSIGHTS_FILE = resolve(STATE_DIR, 'buzz-insights.json');
+const REPORTS_FILE = resolve(STATE_DIR, 'research-reports.json');
 const SEEDS_FILE = resolve(STATE_DIR, 'buzz-seeds.json');
 const HISTORY_FILE = resolve(STATE_DIR, 'history.json');
 const DRY_RUN = process.env.DRY_RUN === '1';
@@ -179,6 +180,42 @@ function mergeOwnMetrics(historyTweets, apiTweets) {
   return historyTweets;
 }
 
+/**
+ * 分析結果の要約文を生成
+ */
+function buildReportSummary(insights) {
+  const hooks = insights.topHookPatterns || [];
+  const tags = insights.topHashtags || [];
+
+  const PATTERN_LABELS = {
+    urgency: '締切カウントダウン系',
+    amount: '金額インパクト系',
+    loss_aversion: '損失回避系（「知らないと損」）',
+    question: '疑問形フック',
+    novelty: '新着告知系',
+    sharing: '共有・紹介系',
+    other: 'その他',
+  };
+
+  const lines = [];
+  if (hooks.length > 0) {
+    const top = hooks[0];
+    lines.push(`最も効果的なフック: ${PATTERN_LABELS[top.pattern] || top.pattern}（重み${top.weight.toFixed(2)}）`);
+  }
+  if (hooks.length >= 2) {
+    const second = hooks[1];
+    lines.push(`2位: ${PATTERN_LABELS[second.pattern] || second.pattern}（重み${second.weight.toFixed(2)}）`);
+  }
+  if (tags.length > 0) {
+    const topTags = tags.slice(0, 3).map(t => t.tag).join(' ');
+    lines.push(`推奨ハッシュタグ: ${topTags}`);
+  }
+  if (insights.ownPerformance) {
+    lines.push(`自アカウント平均いいね: ${insights.ownPerformance.avgLikes}`);
+  }
+  return lines.join('。');
+}
+
 // --- メイン ---
 
 async function main() {
@@ -268,6 +305,39 @@ async function main() {
   // 保存
   await writeJson(INSIGHTS_FILE, insights);
   console.log(`\n💾 インサイト保存: ${INSIGHTS_FILE}`);
+
+  // レポート蓄積
+  const report = {
+    date: new Date().toISOString(),
+    sources: {
+      seeds: seeds.length,
+      ownApi: ownTweetsApi.length,
+      search: searchTweets.length,
+      history: mergedHistory.length,
+      total: allTweets.length,
+    },
+    hookRanking: insights.topHookPatterns.slice(0, 5).map(h => ({
+      pattern: h.pattern,
+      weight: Math.round(h.weight * 100) / 100,
+      count: h.count,
+      example: h.examples?.[0]?.slice(0, 60) || '',
+    })),
+    topHashtags: insights.topHashtags.slice(0, 5).map(t => ({
+      tag: t.tag,
+      weight: Math.round(t.weight * 100) / 100,
+    })),
+    structure: {
+      optimalLines: insights.structureInsights.optimalLineCount,
+      ctaRate: Math.round(insights.structureInsights.ctaRate * 100),
+    },
+    ownPerformance: insights.ownPerformance || null,
+    summary: buildReportSummary(insights),
+  };
+  const reports = (await readJson(REPORTS_FILE)) || [];
+  reports.push(report);
+  await writeJson(REPORTS_FILE, reports);
+  console.log(`📜 レポート保存: ${REPORTS_FILE} (計${reports.length}件)`);
+
   console.log('🎉 バズリサーチ完了');
 }
 
