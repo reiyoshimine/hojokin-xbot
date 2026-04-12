@@ -533,14 +533,16 @@ async function main() {
 
       if (code === 403 && attempt < MAX_RETRY) {
         console.log(`   🔄 403リジェクト → 別のテキストで再試行...`);
+        const prevFirstLine = text.split('\n')[0];
 
-        if (attempt === 1 && process.env.ANTHROPIC_API_KEY) {
-          // 1回目失敗: Claudeに「前回と違う表現で」と再生成を依頼
+        if (process.env.ANTHROPIC_API_KEY) {
+          // Claudeに完全に別の文章を生成させる（URLなし）
           try {
             const input = JSON.stringify({
               type: best.type,
               subsidy: best.subsidy,
-              retryHint: `前回「${text.split('\n')[0]}」で投稿が拒否された。完全に違うフックと構成で書き直して。URLも省略してよい。`,
+              noUrl: true,
+              retryHint: `前回「${prevFirstLine}」で投稿がXに拒否された（重複判定）。以下を守れ：\n- 完全に違うフック（1行目）にしろ。前回と1文字も被るな\n- 文章の構成・順番も変えろ\n- URLは絶対に入れるな\n- 前回と同じ補助金名の表記も避けろ（略称や別の言い方にしろ）`,
             });
             execFileSync('node', [GENERATE_SCRIPT, input], {
               encoding: 'utf-8',
@@ -551,7 +553,7 @@ async function main() {
             const draft = JSON.parse(await readFile(DRAFT_FILE, 'utf-8'));
             if (draft.text && tweetDisplayLen(draft.text) <= 280) {
               text = draft.text;
-              console.log(`   🧠 Claude再生成テキスト採用`);
+              console.log(`   🧠 Claude再生成テキスト採用 (attempt ${attempt + 1})`);
               continue;
             }
           } catch {
@@ -559,16 +561,12 @@ async function main() {
           }
         }
 
-        // テンプレートフォールバック（別バリアントを選ぶ）
-        const fallbackKey = best.subsidy.id + ':retry' + attempt;
+        // テンプレートフォールバック（URLなし）
         if (best.type === 'new') text = buildNewPost(best.subsidy, insights);
         else if (best.type === 'update') text = buildUpdatePost(best.subsidy);
         else text = buildDailyPickPost(best.subsidy, insights);
-        // URLを除去してリトライ（URLが403の原因になりやすい）
-        if (attempt >= 2) {
-          text = text.replace(/\nhttps?:\/\/\S+/g, '');
-          text = clipToTweet(text);
-        }
+        text = text.replace(/\nhttps?:\/\/\S+/g, '');
+        text = clipToTweet(text);
         console.log(`   📝 テンプレートフォールバック (attempt ${attempt + 1})`);
         continue;
       }

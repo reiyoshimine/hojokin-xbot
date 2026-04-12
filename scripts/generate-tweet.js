@@ -24,7 +24,7 @@ function tweetDisplayLen(text) {
 }
 
 async function main() {
-  const { type, subsidy, retryHint } = JSON.parse(process.argv[2]);
+  const { type, subsidy, retryHint, noUrl } = JSON.parse(process.argv[2]);
   console.log(`🤖 Claude AIツイート生成: [${type}] ${subsidy.title}${retryHint ? ' (リトライ)' : ''}`);
 
   const [collection, insights, history] = await Promise.all([
@@ -38,18 +38,18 @@ async function main() {
     .flatMap(b => b.tweets || [])
     .sort((a, b) => (b.score || 0) - (a.score || 0))
     .slice(0, 5)
-    .map(t => t.text)
+    .map(t => `[スコア: ${t.score}] ${t.text}`)
     .join('\n---\n');
 
-  // 過去の自分の投稿（直近5件）
+  // 過去の自分の投稿（直近10件、重複回避用）
   const recentPosts = (history || [])
-    .slice(-5)
+    .slice(-10)
     .map(h => h.text)
     .join('\n---\n');
 
   // バズインサイト要約
   const insightSummary = insights ? [
-    `効果的なフック: ${(insights.topHookPatterns || []).slice(0, 3).map(p => `${p.pattern}(${p.weight})`).join(', ')}`,
+    `最も効果的なフックパターン: ${(insights.topHookPatterns || []).slice(0, 3).map(p => `${p.pattern}(重み${p.weight})`).join(' > ')}`,
     `推奨ハッシュタグ: ${(insights.topHashtags || []).slice(0, 3).map(t => t.tag).join(' ')}`,
     `最適行数: ${insights.structureInsights?.optimalLineCount?.join('〜')}行`,
     `CTA含有率: ${Math.round((insights.structureInsights?.ctaRate || 0) * 100)}%`,
@@ -61,7 +61,7 @@ async function main() {
     subsidy.amount ? `金額: ${subsidy.amount}` : null,
     subsidy.deadline ? `締切: ${subsidy.deadline}` : null,
     subsidy.detail ? `詳細: ${subsidy.detail}` : null,
-    subsidy.url ? `URL: ${subsidy.url}` : null,
+    !noUrl && subsidy.url ? `URL: ${subsidy.url}` : null,
     subsidy.rank ? `推奨ランク: ${subsidy.rank}` : null,
     type === 'update' && subsidy.oldDeadline ? `旧締切: ${subsidy.oldDeadline}` : null,
     type === 'update' && subsidy.oldAmount ? `旧金額: ${subsidy.oldAmount}` : null,
@@ -69,8 +69,15 @@ async function main() {
 
   const typeLabel = type === 'new' ? '新規補助金の告知' : type === 'update' ? '補助金の更新情報' : '今日のピックアップ紹介';
 
-  const prompt = `あなたは補助金情報の X アカウント @japanhojokin の中の人です。
-以下の補助金情報について、バズるツイートを1つ書いてください。
+  const prompt = `あなたは補助金情報のXアカウント @japanhojokin の中の人だ。
+以下の補助金について、Xでバズるツイートを1つ書け。
+
+## 最重要: バズるための戦略
+上のバズ実例を徹底的に分析して、以下の要素を盗め：
+- **1行目のフック**: 実例の冒頭を参考に、思わずスクロールを止める一言を書く。「知らないと損」「まだ知らない人が多い」「○○万円が○日で締切」のような、読者が「自分のこと？」と感じるフレーズ
+- **数字の使い方**: 金額や日数の見せ方を実例から学ぶ。丸い数字、具体的な期限、補助率
+- **構成**: 実例の改行の入れ方、情報の出す順番、CTAの書き方をマネる
+- **読者の自分ごと化**: 「自分には関係ない」→「実は対象」の流れが鉄板
 
 ## 投稿の種類
 ${typeLabel}
@@ -78,30 +85,30 @@ ${typeLabel}
 ## 補助金データ
 ${subsidyInfo}
 
-## バズ分析の結果（どんなツイートが伸びるか）
+## バズ分析の結果
 ${insightSummary}
 
-## 実際にバズった補助金ツイートの実例
+## 実際にバズった補助金ツイートの実例（これを徹底的に参考にしろ）
 ${buzzExamples || '（実例なし）'}
 
-## 自分の過去の投稿（同じ表現を避けること）
+## 自分の過去の投稿（これらと被らない表現にしろ）
 ${recentPosts || '（履歴なし）'}
 
 ## ルール（厳守）
-1. 280文字以内（URLは23文字換算）。必ず280文字以内に収めること
-2. 冒頭1行目が最重要。スクロールを止める「フック」を書く。疑問形、驚き、損失回避、緊急性のどれかを使う
-3. 口語体で、人間が普通にツイートしてるように書く。堅い表現・お役所言葉は絶対NG
-4. 具体的な数字（金額、日数、割合）を必ず含める
-5. 最後にCTA（行動喚起）の一言を入れる
-6. URLがある場合は最終行にURLだけを置く（URL前に空行を入れる）
-7. ハッシュタグは0〜2個まで（入れなくてもOK）
-8. 絵文字は使わない
-9. 「〜です」「〜ます」の丁寧語は使わない。「〜だ」「〜する」「〜な」の常体で
-10. 過去の投稿と同じフックや表現は使わない
-11. HTMLタグは使わない。プレーンテキストのみ
+1. 280文字以内（URLは23文字換算）
+2. 1行目でスクロールを止めろ。フックが命
+3. 口語体。人間がツイートしてるように自然に。堅い表現NG
+4. 具体的な数字（金額・日数・割合）を必ず入れろ
+5. 最後にCTA（行動喚起）を入れろ
+6. ${noUrl ? 'URLは入れるな' : 'URLがある場合は最終行にURLだけを置け（URL前に空行）'}
+7. ハッシュタグは0〜2個
+8. 絵文字は使うな
+9. 「〜です」「〜ます」NG。「〜だ」「〜する」の常体で
+10. 過去の投稿のフックや言い回しを絶対に再利用するな。毎回新鮮な表現にしろ
+11. HTMLタグ禁止
 
-## 出力形式
-ツイート本文だけを出力してください。説明や前置きは不要です。${retryHint ? `\n\n## 重要な追加指示\n${retryHint}` : ''}`;
+## 出力
+ツイート本文のみ。説明・前置き・補足は一切不要。${retryHint ? `\n\n## 追加指示（最優先）\n${retryHint}` : ''}`;
 
   const client = new Anthropic();
   const response = await client.messages.create({
@@ -112,8 +119,8 @@ ${recentPosts || '（履歴なし）'}
 
   let finalText = response.content[0].text.trim();
 
-  // URL確認: 補助金にURLがあるのに生成テキストにない場合は追加
-  if (subsidy.url && !finalText.includes(subsidy.url)) {
+  // URL追加（noUrlでない場合のみ）
+  if (!noUrl && subsidy.url && !finalText.includes(subsidy.url)) {
     finalText = finalText.replace(/\n*$/, '') + '\n\n' + subsidy.url;
   }
 
