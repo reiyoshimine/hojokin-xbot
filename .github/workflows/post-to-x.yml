@@ -30,8 +30,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: リサーチリポから index.html を取得（全履歴）
+        env:
+          GH_TOKEN: ${{ secrets.RESEARCH_REPO_TOKEN }}
         run: |
-          git clone --depth 30 https://github.com/reiyoshimine/subsidy-research-bot.git /tmp/research-repo
+          git clone --depth 30 https://x-access-token:${GH_TOKEN}@github.com/reiyoshimine/subsidy-research-bot.git /tmp/research-repo
           cp /tmp/research-repo/index.html ./index.html
           # git diff 用に旧版も取得
           cd /tmp/research-repo
