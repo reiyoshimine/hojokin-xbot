@@ -527,7 +527,6 @@ async function main() {
   } else {
     console.log('🏆 バズコレクション: 新規ツイートなし');
   }
-  }
 
   console.log('🎉 バズリサーチ完了');
 }
