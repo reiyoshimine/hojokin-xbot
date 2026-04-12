@@ -440,5 +440,79 @@
     },
     "ownPerformance": null,
     "summary": "最も効果的なフック: 締切カウントダウン系（重み0.63）。2位: 金額インパクト系（重み0.77）。推奨ハッシュタグ: #中小企業支援 #開業医 #クリニック開業"
+  },
+  {
+    "date": "2026-04-12T12:12:40.810Z",
+    "sources": {
+      "webSearch": 0,
+      "seeds": 10,
+      "ownApi": 17,
+      "search": 0,
+      "history": 4,
+      "total": 27
+    },
+    "hookRanking": [
+      {
+        "pattern": "amount",
+        "weight": 0.78,
+        "count": 3,
+        "example": "補助額が変わってたのでお知らせ。"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.64,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.92,
+        "count": 2,
+        "example": "開業1年以内の人、これ知らないと純粋にもったいない。"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.4,
+        "count": 16,
+        "example": "1/8（新着）"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0,
+        "count": 2,
+        "example": "新しく出てきた一件、これは結構良さそう。"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#中小企業支援",
+        "weight": 1
+      },
+      {
+        "tag": "#開業医",
+        "weight": 0.7
+      },
+      {
+        "tag": "#クリニック開業",
+        "weight": 0.7
+      },
+      {
+        "tag": "#補助金",
+        "weight": 0.45
+      },
+      {
+        "tag": "#個人事業主",
+        "weight": 0.31
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        5,
+        7
+      ],
+      "ctaRate": 50
+    },
+    "ownPerformance": null,
+    "summary": "最も効果的なフック: 金額インパクト系（重み0.78）。2位: 締切カウントダウン系（重み0.64）。推奨ハッシュタグ: #中小企業支援 #開業医 #クリニック開業"
   }
 ]
