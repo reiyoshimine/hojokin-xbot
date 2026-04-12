@@ -1,21 +1,13 @@
-// 補助金XBot - Claude AIツイート生成スクリプト
-// 補助金データ + バズ分析データを元に、Claudeがバズるツイート本文を生成
-// post-new-subsidies.js の前段で実行し、生成結果を state/claude-draft.json に保存
+// 補助金XBot - Claude AIツイート生成プロンプトビルダー
+// candidate.json + バズデータからプロンプトを組み立てて stdout に出力
+// claude-code-action から呼ばれ、生成結果は state/claude-draft.json に保存される
 
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import Anthropic from '@anthropic-ai/sdk';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const REPO_ROOT = resolve(__dirname, '..');
-const STATE_DIR = resolve(REPO_ROOT, 'state');
-
-const DRAFT_FILE = resolve(STATE_DIR, 'claude-draft.json');
-const COLLECTION_FILE = resolve(STATE_DIR, 'buzz-collection.json');
-const INSIGHTS_FILE = resolve(STATE_DIR, 'buzz-insights.json');
-const HISTORY_FILE = resolve(STATE_DIR, 'history.json');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const STATE_DIR = resolve(__dirname, '..', 'state');
 
 async function readJson(path) {
   try { return JSON.parse(await readFile(path, 'utf-8')); }
@@ -23,24 +15,18 @@ async function readJson(path) {
 }
 
 async function main() {
-  // 引数: JSON形式の補助金データ（post-new-subsidies.js から渡される）
-  const subsidyJson = process.argv[2];
-  if (!subsidyJson) {
-    console.error('Usage: node generate-tweet.js \'{"type":"new","subsidy":{...}}\'');
+  const candidate = await readJson(resolve(STATE_DIR, 'candidate.json'));
+  if (!candidate) {
+    console.error('candidate.json が見つかりません');
     process.exit(1);
   }
 
-  const { type, subsidy } = JSON.parse(subsidyJson);
-  console.log(`🤖 Claude AIツイート生成: [${type}] ${subsidy.title}`);
+  const { type, subsidy } = candidate;
+  const collection = await readJson(resolve(STATE_DIR, 'buzz-collection.json'));
+  const insights = await readJson(resolve(STATE_DIR, 'buzz-insights.json'));
+  const history = await readJson(resolve(STATE_DIR, 'history.json'));
 
-  // コンテキスト収集
-  const [collection, insights, history] = await Promise.all([
-    readJson(COLLECTION_FILE),
-    readJson(INSIGHTS_FILE),
-    readJson(HISTORY_FILE),
-  ]);
-
-  // バズツイートの実例（最新バッチから上位5件）
+  // バズツイート実例
   const buzzExamples = (collection || [])
     .flatMap(b => b.tweets || [])
     .sort((a, b) => (b.score || 0) - (a.score || 0))
@@ -48,13 +34,13 @@ async function main() {
     .map(t => t.text)
     .join('\n---\n');
 
-  // 過去の自分の投稿（直近5件、重複回避用）
+  // 過去の自分の投稿
   const recentPosts = (history || [])
     .slice(-5)
     .map(h => h.text)
     .join('\n---\n');
 
-  // バズインサイトの要約
+  // バズインサイト要約
   const insightSummary = insights ? [
     `効果的なフック: ${(insights.topHookPatterns || []).slice(0, 3).map(p => `${p.pattern}(${p.weight})`).join(', ')}`,
     `推奨ハッシュタグ: ${(insights.topHashtags || []).slice(0, 3).map(t => t.tag).join(' ')}`,
@@ -62,7 +48,7 @@ async function main() {
     `CTA含有率: ${Math.round((insights.structureInsights?.ctaRate || 0) * 100)}%`,
   ].join('\n') : 'インサイトなし';
 
-  // 補助金情報の整理
+  // 補助金情報
   const subsidyInfo = [
     `名前: ${subsidy.title}`,
     subsidy.amount ? `金額: ${subsidy.amount}` : null,
@@ -70,14 +56,14 @@ async function main() {
     subsidy.detail ? `詳細: ${subsidy.detail}` : null,
     subsidy.url ? `URL: ${subsidy.url}` : null,
     subsidy.rank ? `推奨ランク: ${subsidy.rank}` : null,
-    subsidy.categories ? `カテゴリ: ${subsidy.categories.join(', ')}` : null,
     type === 'update' && subsidy.oldDeadline ? `旧締切: ${subsidy.oldDeadline}` : null,
     type === 'update' && subsidy.oldAmount ? `旧金額: ${subsidy.oldAmount}` : null,
   ].filter(Boolean).join('\n');
 
   const typeLabel = type === 'new' ? '新規補助金の告知' : type === 'update' ? '補助金の更新情報' : '今日のピックアップ紹介';
 
-  const prompt = `あなたは補助金情報の X アカウント @japanhojokin の中の人です。
+  // プロンプトを stdout に出力
+  console.log(`あなたは補助金情報の X アカウント @japanhojokin の中の人です。
 以下の補助金情報について、バズるツイートを1つ書いてください。
 
 ## 投稿の種類
@@ -109,55 +95,10 @@ ${recentPosts || '（履歴なし）'}
 11. HTMLタグは使わない。プレーンテキストのみ
 
 ## 出力形式
-ツイート本文だけを出力してください。説明や前置きは不要です。`;
-
-  const client = new Anthropic();
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 500,
-    messages: [{ role: 'user', content: prompt }],
-  });
-
-  const generatedText = response.content[0].text.trim();
-
-  // URL確認: 補助金にURLがあるのに生成テキストにない場合は追加
-  let finalText = generatedText;
-  if (subsidy.url && !finalText.includes(subsidy.url)) {
-    finalText = finalText.replace(/\n*$/, '') + '\n\n' + subsidy.url;
-  }
-
-  // 280文字チェック
-  const displayLen = tweetDisplayLen(finalText);
-  if (displayLen > 280) {
-    console.warn(`⚠️ 生成テキストが${displayLen}文字。280文字に収まりません。テンプレートにフォールバックします。`);
-    process.exit(2); // exit code 2 = フォールバック指示
-  }
-
-  console.log(`\n=== Claude生成ツイート (${displayLen}文字) ===\n`);
-  console.log(finalText);
-
-  // 保存
-  await mkdir(STATE_DIR, { recursive: true });
-  const draft = {
-    generatedAt: new Date().toISOString(),
-    type,
-    subsidyTitle: subsidy.title,
-    text: finalText,
-    displayLen,
-    model: 'claude-sonnet-4-6',
-  };
-  await writeFile(DRAFT_FILE, JSON.stringify(draft, null, 2) + '\n', 'utf-8');
-  console.log(`💾 保存: ${DRAFT_FILE}`);
-}
-
-function tweetDisplayLen(text) {
-  const urls = text.match(/https?:\/\/\S+/g) || [];
-  let len = text.length;
-  for (const u of urls) len += 23 - u.length;
-  return len;
+ツイート本文だけを出力してください。説明や前置きは不要です。`);
 }
 
 main().catch(e => {
-  console.error('💥 Claude生成失敗:', e.message);
-  process.exit(2); // フォールバック
+  console.error('エラー:', e.message);
+  process.exit(1);
 });
