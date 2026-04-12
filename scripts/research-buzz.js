@@ -5,6 +5,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { TwitterApi } from 'twitter-api-v2';
+import Anthropic from '@anthropic-ai/sdk';
 import { computeInsights, engagementScore } from './analyze-patterns.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -141,6 +142,100 @@ async function searchBuzzTweets(client) {
 }
 
 /**
+ * Claude Web検索でX上の補助金バズツイートを収集
+ * X Search APIが使えないFree tierの代替手段
+ */
+async function searchBuzzWithClaude() {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.log('   🌐 ANTHROPIC_API_KEY 未設定 → Web検索スキップ');
+    return [];
+  }
+
+  const queries = [
+    '補助金 バズ ツイート X 2026',
+    '助成金 申請 話題 ツイート 2026',
+    '補助金 知らないと損 X',
+  ];
+
+  const prompt = `以下の検索クエリでWeb検索し、X（Twitter）で実際にバズっている補助金・助成金関連のツイートを見つけてください。
+
+検索クエリ:
+${queries.map((q, i) => `${i + 1}. ${q}`).join('\n')}
+
+## やること
+1. 各クエリでWeb検索して、X上の補助金・助成金関連の人気ツイートを見つける
+2. いいね・RT・リプライが多い（バズっている）ツイートを優先的に収集する
+3. ツイートの本文・エンゲージメント数を抽出する
+
+## 出力形式（厳守）
+JSON配列のみを出力してください。説明や前置きは不要です。
+各要素は以下の形式:
+[
+  {
+    "text": "ツイートの本文（そのまま）",
+    "metrics": {"likes": 数値, "retweets": 数値, "replies": 数値},
+    "source": "web_search"
+  }
+]
+
+- 最低5件、最大15件
+- エンゲージメント数が不明な場合は推定値でOK（ただし0にはしない）
+- 補助金・助成金に直接関係ないツイートは除外
+- 広告・宣伝っぽいものは除外
+- 実際にバズっている（多くの反応がある）ツイートのみ`;
+
+  try {
+    const client = new Anthropic();
+    const response = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 4096,
+      tools: [{
+        type: 'web_search_20250305',
+        name: 'web_search',
+        max_uses: 5,
+      }],
+      messages: [{ role: 'user', content: prompt }],
+    });
+
+    // レスポンスからテキストブロックを取得
+    const textBlock = response.content.find(b => b.type === 'text');
+    if (!textBlock) {
+      console.log('   ⚠️ Claude Web検索: テキスト応答なし');
+      return [];
+    }
+
+    // JSON部分を抽出（```json ... ``` やプレーンJSON両方に対応）
+    let jsonStr = textBlock.text;
+    const jsonMatch = jsonStr.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      console.log('   ⚠️ Claude Web検索: JSON解析失敗');
+      return [];
+    }
+
+    const tweets = JSON.parse(jsonMatch[0]);
+    const results = tweets
+      .filter(t => t.text && t.metrics)
+      .map(t => ({
+        text: t.text,
+        metrics: {
+          likes: t.metrics.likes || 0,
+          retweets: t.metrics.retweets || 0,
+          replies: t.metrics.replies || 0,
+        },
+        source: 'web_search',
+        tweetId: null,
+        createdAt: new Date().toISOString(),
+      }));
+
+    console.log(`   🌐 Claude Web検索から ${results.length}件のバズツイートを収集`);
+    return results;
+  } catch (e) {
+    console.warn(`   ⚠️ Claude Web検索失敗: ${e.message}`);
+    return [];
+  }
+}
+
+/**
  * 手動シードデータを読み込み
  */
 async function loadSeeds() {
@@ -227,21 +322,22 @@ async function main() {
   const client = getClient();
 
   // データ収集
-  const [seeds, ownTweetsApi, searchTweets, historyTweets] = await Promise.all([
+  const [seeds, ownTweetsApi, searchTweets, webSearchTweets, historyTweets] = await Promise.all([
     loadSeeds(),
     fetchOwnTweets(client),
     searchBuzzTweets(client),
+    searchBuzzWithClaude(),
     loadOwnHistory(),
   ]);
 
   // 自分の履歴にAPIメトリクスをマージ
   const mergedHistory = mergeOwnMetrics(historyTweets, ownTweetsApi);
 
-  // 全データを統合（重複排除はtweetIdベース）
+  // 全データを統合（重複排除はテキスト先頭50文字ベース）
   const allTweets = [];
   const seen = new Set();
 
-  for (const t of [...ownTweetsApi, ...searchTweets, ...seeds, ...mergedHistory]) {
+  for (const t of [...webSearchTweets, ...ownTweetsApi, ...searchTweets, ...seeds, ...mergedHistory]) {
     const key = t.tweetId || t.text?.slice(0, 50);
     if (key && seen.has(key)) continue;
     if (key) seen.add(key);
@@ -249,7 +345,7 @@ async function main() {
   }
 
   console.log(`   📦 分析対象: 計${allTweets.length}件`);
-  console.log(`      内訳: シード${seeds.length} / API自ツイート${ownTweetsApi.length} / 検索${searchTweets.length} / 履歴${mergedHistory.length}`);
+  console.log(`      内訳: Web検索${webSearchTweets.length} / シード${seeds.length} / API自ツイート${ownTweetsApi.length} / X検索${searchTweets.length} / 履歴${mergedHistory.length}`);
 
   if (allTweets.length === 0) {
     console.log('⚠️ 分析対象がありません。buzz-seeds.json にデータを追加してください。');
@@ -311,6 +407,7 @@ async function main() {
   const report = {
     date: new Date().toISOString(),
     sources: {
+      webSearch: webSearchTweets.length,
       seeds: seeds.length,
       ownApi: ownTweetsApi.length,
       search: searchTweets.length,
