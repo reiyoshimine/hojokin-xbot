@@ -17,6 +17,7 @@ const RESEARCH_REPO = process.env.RESEARCH_REPO_PATH || '/tmp/research-repo';
 const INDEX_PATH = resolve(REPO_ROOT, 'index.html');
 const STATE_DIR = resolve(REPO_ROOT, 'state');
 const STATE_FILE = resolve(STATE_DIR, 'posted.json');
+const HISTORY_FILE = resolve(STATE_DIR, 'history.json');
 const DRY_RUN = process.env.DRY_RUN === '1';
 const FORCE_DAILY_PICK = process.env.FORCE_DAILY_PICK === '1';
 const FORCE_POST = process.env.FORCE_POST === '1'; // 同日重複ガードを無視（テスト用）
@@ -65,6 +66,22 @@ async function readState() {
 async function writeStateFile(state) {
   await mkdir(STATE_DIR, { recursive: true });
   await writeFile(STATE_FILE, JSON.stringify(state, null, 2) + '\n', 'utf-8');
+}
+
+async function readHistory() {
+  try {
+    const content = await readFile(HISTORY_FILE, 'utf-8');
+    return JSON.parse(content);
+  } catch {
+    return [];
+  }
+}
+
+async function appendHistory(entry) {
+  const history = await readHistory();
+  history.push(entry);
+  await mkdir(STATE_DIR, { recursive: true });
+  await writeFile(HISTORY_FILE, JSON.stringify(history, null, 2) + '\n', 'utf-8');
 }
 
 /**
@@ -768,6 +785,17 @@ async function main() {
     lastPostedAt: new Date().toISOString(),
   });
   console.log(`💾 状態ファイル更新: ${STATE_FILE}`);
+
+  // 投稿履歴に追加
+  await appendHistory({
+    date: today,
+    type: best.type,
+    title: best.subsidy.title,
+    text,
+    tweetId,
+    postedAt: new Date().toISOString(),
+  });
+  console.log(`📜 履歴ファイル更新: ${HISTORY_FILE}`);
 
   console.log('🎉 完了');
 }

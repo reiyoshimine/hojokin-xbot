@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>補助金XBot - 投稿プレビュー</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f5f8fa;
+    color: #14171a;
+    padding: 20px;
+  }
+  .container { max-width: 600px; margin: 0 auto; }
+  h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #657786;
+    margin-bottom: 20px;
+  }
+  .controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .controls button {
+    padding: 6px 14px;
+    border: 1px solid #e1e8ed;
+    border-radius: 20px;
+    background: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .controls button:hover { background: #e8f5fd; border-color: #1da1f2; }
+  .controls button.active { background: #1da1f2; color: #fff; border-color: #1da1f2; }
+  .tweet-card {
+    background: #fff;
+    border: 1px solid #e1e8ed;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: box-shadow 0.15s;
+  }
+  .tweet-card:hover { box-shadow: 0 1px 8px rgba(0,0,0,0.08); }
+  .tweet-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #1da1f2;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 18px;
+    flex-shrink: 0;
+  }
+  .tweet-meta { flex: 1; }
+  .tweet-name { font-weight: 700; font-size: 14px; }
+  .tweet-handle { color: #657786; font-size: 13px; }
+  .tweet-date { color: #657786; font-size: 12px; margin-left: auto; white-space: nowrap; }
+  .tweet-body {
+    font-size: 15px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .tweet-body a {
+    color: #1da1f2;
+    text-decoration: none;
+  }
+  .tweet-body a:hover { text-decoration: underline; }
+  .tweet-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+  }
+  .tweet-type {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .type-new { background: #e8f5e9; color: #2e7d32; }
+  .type-update { background: #fff3e0; color: #e65100; }
+  .type-daily { background: #e3f2fd; color: #1565c0; }
+  .tweet-link {
+    font-size: 12px;
+    color: #1da1f2;
+    text-decoration: none;
+    margin-left: auto;
+  }
+  .tweet-link:hover { text-decoration: underline; }
+  .char-count { font-size: 11px; color: #aab8c2; }
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #657786;
+    font-size: 15px;
+  }
+  .stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .stat-box {
+    background: #fff;
+    border: 1px solid #e1e8ed;
+    border-radius: 10px;
+    padding: 12px 16px;
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+  }
+  .stat-num { font-size: 24px; font-weight: 700; color: #1da1f2; }
+  .stat-label { font-size: 12px; color: #657786; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>補助金XBot - 投稿プレビュー</h1>
+  <p class="subtitle">@japanhojokin の投稿履歴</p>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls" id="controls">
+    <button class="active" data-filter="all">すべて</button>
+    <button data-filter="new">新規</button>
+    <button data-filter="update">更新</button>
+    <button data-filter="daily">ピックアップ</button>
+  </div>
+
+  <div id="feed"></div>
+</div>
+
+<script>
+const TYPE_LABELS = { new: '新規', update: '更新', daily: 'ピックアップ' };
+const TYPE_CLASS = { new: 'type-new', update: 'type-update', daily: 'type-daily' };
+
+function linkifyUrls(text) {
+  return text.replace(/(https?:\/\/\S+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return `${d.getFullYear()}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getDate().toString().padStart(2,'0')}`;
+}
+
+function tweetDisplayLen(text) {
+  const urls = text.match(/https?:\/\/\S+/g) || [];
+  let len = text.length;
+  for (const u of urls) len += 23 - u.length;
+  return len;
+}
+
+function renderStats(history) {
+  const total = history.length;
+  const counts = { new: 0, update: 0, daily: 0 };
+  history.forEach(h => counts[h.type] = (counts[h.type] || 0) + 1);
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-box"><div class="stat-num">${total}</div><div class="stat-label">総投稿数</div></div>
+    <div class="stat-box"><div class="stat-num">${counts.new}</div><div class="stat-label">新規</div></div>
+    <div class="stat-box"><div class="stat-num">${counts.update}</div><div class="stat-label">更新</div></div>
+    <div class="stat-box"><div class="stat-num">${counts.daily}</div><div class="stat-label">ピックアップ</div></div>
+  `;
+}
+
+function renderFeed(history, filter) {
+  const feed = document.getElementById('feed');
+  const items = filter === 'all' ? history : history.filter(h => h.type === filter);
+
+  if (items.length === 0) {
+    feed.innerHTML = '<div class="empty">投稿履歴がありません</div>';
+    return;
+  }
+
+  feed.innerHTML = items.slice().reverse().map(h => {
+    const displayLen = tweetDisplayLen(h.text);
+    const tweetUrl = h.tweetId ? `https://x.com/japanhojokin/status/${h.tweetId}` : '';
+    return `
+      <div class="tweet-card">
+        <div class="tweet-header">
+          <div class="avatar">補</div>
+          <div class="tweet-meta">
+            <div class="tweet-name">補助金情報bot</div>
+            <div class="tweet-handle">@japanhojokin</div>
+          </div>
+          <div class="tweet-date">${formatDate(h.postedAt || h.date)}</div>
+        </div>
+        <div class="tweet-body">${linkifyUrls(h.text.replace(/</g,'&lt;').replace(/>/g,'&gt;'))}</div>
+        <div class="tweet-footer">
+          <span class="tweet-type ${TYPE_CLASS[h.type] || ''}">${TYPE_LABELS[h.type] || h.type}</span>
+          <span class="char-count">${displayLen}/280</span>
+          ${tweetUrl ? `<a class="tweet-link" href="${tweetUrl}" target="_blank" rel="noopener">Xで見る</a>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function init() {
+  let history = [];
+  try {
+    const res = await fetch('./state/history.json');
+    history = await res.json();
+  } catch (e) {
+    console.warn('履歴読み込み失敗:', e);
+  }
+
+  renderStats(history);
+  renderFeed(history, 'all');
+
+  document.getElementById('controls').addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    document.querySelectorAll('#controls button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderFeed(history, btn.dataset.filter);
+  });
+}
+
+init();
+</script>
+</body>
+</html>
