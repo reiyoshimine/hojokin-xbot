@@ -1,1 +1,75 @@
-[]
+[
+  {
+    "date": "2026-04-12T10:40:40.912Z",
+    "sources": {
+      "seeds": 10,
+      "ownApi": 14,
+      "search": 0,
+      "history": 1,
+      "total": 24
+    },
+    "hookRanking": [
+      {
+        "pattern": "loss_aversion",
+        "weight": 1,
+        "count": 1,
+        "example": "知らないと損する補助金まとめ"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.72,
+        "count": 3,
+        "example": "補助額が変わってたのでお知らせ。"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.58,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.37,
+        "count": 16,
+        "example": "1/8（新着）"
+      },
+      {
+        "pattern": "sharing",
+        "weight": 0,
+        "count": 1,
+        "example": "前に紹介したやつ、締切が確定したので改めて共有。"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#中小企業支援",
+        "weight": 1
+      },
+      {
+        "tag": "#開業医",
+        "weight": 0.7
+      },
+      {
+        "tag": "#クリニック開業",
+        "weight": 0.7
+      },
+      {
+        "tag": "#補助金",
+        "weight": 0.45
+      },
+      {
+        "tag": "#個人事業主",
+        "weight": 0.31
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        5,
+        7
+      ],
+      "ctaRate": 50
+    },
+    "ownPerformance": null,
+    "summary": "最も効果的なフック: 損失回避系（「知らないと損」）（重み1.00）。2位: 金額インパクト系（重み0.72）。推奨ハッシュタグ: #中小企業支援 #開業医 #クリニック開業"
+  }
+]
