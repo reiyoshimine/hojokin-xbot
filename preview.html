@@ -222,6 +222,70 @@
     padding-top: 8px;
     border-top: 1px solid #f0f0f0;
   }
+
+  /* バズコレクション */
+  .buzz-batch-date {
+    font-size: 12px;
+    color: #657786;
+    font-weight: 600;
+    margin: 16px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .buzz-card {
+    background: #fff;
+    border: 1px solid #e1e8ed;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .buzz-card:hover { box-shadow: 0 1px 8px rgba(0,0,0,0.08); }
+  .buzz-rank {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    background: #ff9800;
+    border-radius: 10px;
+    padding: 2px 8px;
+  }
+  .buzz-rank.top1 { background: #e53935; }
+  .buzz-rank.top2 { background: #ff5722; }
+  .buzz-rank.top3 { background: #ff9800; }
+  .buzz-text {
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-bottom: 8px;
+    padding-right: 50px;
+  }
+  .buzz-text a { color: #1da1f2; text-decoration: none; }
+  .buzz-metrics {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: #657786;
+    align-items: center;
+  }
+  .buzz-metric { display: flex; align-items: center; gap: 4px; }
+  .buzz-score {
+    font-size: 11px;
+    font-weight: 700;
+    color: #e53935;
+    margin-left: auto;
+  }
+  .buzz-source {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    background: #f0f0f0;
+    color: #657786;
+  }
 </style>
 </head>
 <body>
@@ -233,6 +297,7 @@
   <div class="tabs">
     <button class="tab active" data-tab="posts">投稿履歴</button>
     <button class="tab" data-tab="research">リサーチレポート</button>
+    <button class="tab" data-tab="buzz">バズ集</button>
   </div>
 
   <!-- 投稿履歴タブ -->
@@ -251,6 +316,12 @@
   <div class="tab-panel" id="panel-research">
     <div class="stats" id="research-stats"></div>
     <div id="reports"></div>
+  </div>
+
+  <!-- バズコレクションタブ -->
+  <div class="tab-panel" id="panel-buzz">
+    <div class="stats" id="buzz-stats"></div>
+    <div id="buzz-feed"></div>
   </div>
 </div>
 
@@ -397,16 +468,64 @@ function renderReports(reports) {
   }).join('');
 }
 
+// --- バズコレクションタブ ---
+const SOURCE_LABELS = { own: '自ツイート', search: '検索', seeds: 'シード', history: '履歴', own_with_metrics: '自ツイート' };
+
+function renderBuzzStats(collection) {
+  const el = document.getElementById('buzz-stats');
+  if (!collection || collection.length === 0) { el.innerHTML = ''; return; }
+  const totalTweets = collection.reduce((s, b) => s + b.tweets.length, 0);
+  const allScores = collection.flatMap(b => b.tweets.map(t => t.score));
+  const maxScore = allScores.length > 0 ? Math.max(...allScores) : 0;
+  el.innerHTML = `
+    <div class="stat-box"><div class="stat-num">${totalTweets}</div><div class="stat-label">蓄積ツイート数</div></div>
+    <div class="stat-box"><div class="stat-num">${collection.length}</div><div class="stat-label">収集回数</div></div>
+    <div class="stat-box"><div class="stat-num">${maxScore.toFixed(0)}</div><div class="stat-label">最高スコア</div></div>
+  `;
+}
+
+function renderBuzzFeed(collection) {
+  const el = document.getElementById('buzz-feed');
+  if (!collection || collection.length === 0) {
+    el.innerHTML = '<div class="empty">バズツイートはまだ収集されていません</div>';
+    return;
+  }
+  el.innerHTML = collection.slice().reverse().map(batch => {
+    const dateStr = formatDateTime(batch.collectedAt);
+    const cards = batch.tweets.map((t, i) => {
+      const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+      const tweetUrl = t.tweetId ? `https://x.com/i/status/${t.tweetId}` : '';
+      return `
+        <div class="buzz-card">
+          <span class="buzz-rank ${rankClass}">#${i + 1}</span>
+          <div class="buzz-text">${linkifyUrls((t.text || '').replace(/</g,'&lt;').replace(/>/g,'&gt;'))}</div>
+          <div class="buzz-metrics">
+            <span class="buzz-metric">❤️ ${t.metrics?.likes || 0}</span>
+            <span class="buzz-metric">🔁 ${t.metrics?.retweets || 0}</span>
+            <span class="buzz-metric">💬 ${t.metrics?.replies || 0}</span>
+            <span class="buzz-source">${SOURCE_LABELS[t.source] || t.source}</span>
+            ${tweetUrl ? `<a class="tweet-link" href="${tweetUrl}" target="_blank" rel="noopener">Xで見る</a>` : ''}
+            <span class="buzz-score">Score: ${t.score?.toFixed(1) || '?'}</span>
+          </div>
+        </div>`;
+    }).join('');
+    return `<div class="buzz-batch-date">🏆 ${dateStr} に収集</div>${cards}`;
+  }).join('');
+}
+
 // --- 初期化 ---
 async function init() {
-  let history = [], reports = [];
+  let history = [], reports = [], buzzCollection = [];
   try { history = await (await fetch('./state/history.json')).json(); } catch {}
   try { reports = await (await fetch('./state/research-reports.json')).json(); } catch {}
+  try { buzzCollection = await (await fetch('./state/buzz-collection.json')).json(); } catch {}
 
   renderStats(history);
   renderFeed(history, 'all');
   renderResearchStats(reports);
   renderReports(reports);
+  renderBuzzStats(buzzCollection);
+  renderBuzzFeed(buzzCollection);
 
   document.getElementById('controls').addEventListener('click', e => {
     const btn = e.target.closest('button');
