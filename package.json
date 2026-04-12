@@ -1,0 +1,22 @@
+{
+  "name": "subsidy-x-bot",
+  "version": "1.0.0",
+  "description": "補助金情報をXに自動投稿するbot",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "parse": "node scripts/parse-subsidies.js",
+    "post:new": "node scripts/post-new-subsidies.js",
+    "post:weekly": "node scripts/post-weekly-summary.js",
+    "test:parse": "node scripts/parse-subsidies.js ../index.html",
+    "test:dry-new": "DRY_RUN=1 node scripts/post-new-subsidies.js",
+    "test:dry-weekly": "DRY_RUN=1 node scripts/post-weekly-summary.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "twitter-api-v2": "^1.18.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,80 @@
+name: 補助金XBot - 新規/更新ポスト
+
+on:
+  # リサーチリポから repository_dispatch で呼ばれる
+  repository_dispatch:
+    types: [index-updated]
+  schedule:
+    # 毎日12:00 JST（03:00 UTC）に「今日のピックアップ」フォールバックを実行
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'ドライラン（実際に投稿しない）'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['true', 'false']
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: リサーチリポから index.html を取得（全履歴）
+        run: |
+          git clone --depth 30 https://github.com/reiyoshimine/subsidy-research-bot.git /tmp/research-repo
+          cp /tmp/research-repo/index.html ./index.html
+          # git diff 用に旧版も取得
+          cd /tmp/research-repo
+          PREV_COMMIT=$(git log --oneline --diff-filter=M -- index.html | sed -n '2p' | awk '{print $1}')
+          if [ -n "$PREV_COMMIT" ]; then
+            git show "$PREV_COMMIT:index.html" > /tmp/index-old.html
+            cp /tmp/index-old.html "$GITHUB_WORKSPACE/index-old.html"
+            echo "HAS_OLD=true" >> $GITHUB_ENV
+          else
+            echo "HAS_OLD=false" >> $GITHUB_ENV
+          fi
+          cd "$GITHUB_WORKSPACE"
+
+      - name: Node.js セットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 依存パッケージをインストール
+        run: npm install --no-audit --no-fund
+
+      - name: 新規/更新ポストを実行
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+          DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '1' || '' }}
+        run: node scripts/post-new-subsidies.js
+
+      - name: 状態ファイルをコミット（同日内重複防止用）
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -f state/posted.json ]; then
+            git add state/posted.json
+            if ! git diff --cached --quiet; then
+              git commit -m "X bot 状態更新 [skip ci]"
+              git push
+            else
+              echo "状態ファイルに変更なし"
+            fi
+          else
+            echo "状態ファイルが存在しない（投稿スキップ時）"
+          fi
