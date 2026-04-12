@@ -588,5 +588,84 @@
     },
     "ownPerformance": null,
     "summary": "最も効果的なフック: 損失回避系（「知らないと損」）（重み0.93）。2位: その他（重み0.41）。推奨ハッシュタグ: #給付金 #コロナ支援 #フリーランス"
+  },
+  {
+    "date": "2026-04-12T21:42:11.695Z",
+    "sources": {
+      "webSearch": 15,
+      "seeds": 10,
+      "ownApi": 18,
+      "search": 0,
+      "history": 6,
+      "total": 43
+    },
+    "hookRanking": [
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.93,
+        "count": 3,
+        "example": "【知らないと損】2026年度に中小企業が使える補助金5選🔥"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.44,
+        "count": 30,
+        "example": "💡補助金と助成金の違い、説明できますか？"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.75,
+        "count": 3,
+        "example": "補助額が変わってたのでお知らせ。"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.61,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0.02,
+        "count": 3,
+        "example": "毎月1,500〜2,000件の新規補助金・助成金が更新されています📊"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#知らないと損",
+        "weight": 1
+      },
+      {
+        "tag": "#経営者必見",
+        "weight": 0.85
+      },
+      {
+        "tag": "#注意事項",
+        "weight": 0.85
+      },
+      {
+        "tag": "#申請",
+        "weight": 0.66
+      },
+      {
+        "tag": "#社労士が教える",
+        "weight": 0.66
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        6,
+        8
+      ],
+      "ctaRate": 30
+    },
+    "ownPerformance": {
+      "bestTweetId": "2043310878037066035",
+      "bestTweetLikes": 1,
+      "avgLikes": 1,
+      "analyzedCount": 1
+    },
+    "summary": "最も効果的なフック: 損失回避系（「知らないと損」）（重み0.93）。2位: その他（重み0.44）。推奨ハッシュタグ: #知らないと損 #経営者必見 #注意事項。自アカウント平均いいね: 1"
   }
 ]
