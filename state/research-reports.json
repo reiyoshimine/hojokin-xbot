@@ -514,5 +514,79 @@
     },
     "ownPerformance": null,
     "summary": "最も効果的なフック: 金額インパクト系（重み0.78）。2位: 締切カウントダウン系（重み0.64）。推奨ハッシュタグ: #中小企業支援 #開業医 #クリニック開業"
+  },
+  {
+    "date": "2026-04-12T12:17:02.437Z",
+    "sources": {
+      "webSearch": 15,
+      "seeds": 10,
+      "ownApi": 17,
+      "search": 0,
+      "history": 4,
+      "total": 42
+    },
+    "hookRanking": [
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.93,
+        "count": 4,
+        "example": "【知らないと損】中小企業が使える補助金・助成金まとめ"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.41,
+        "count": 27,
+        "example": "IT導入補助金2025、採択率95%で通過しました！申請のコツは「導入前後の業務改善効果を数値で書くこと」これだけです。"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.76,
+        "count": 4,
+        "example": "CEV補助金制度を活用すれば、テスラがお得に購入できるって知っていましたか？🚙 国からの補助金（65万円）と、各地方自"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.62,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0,
+        "count": 3,
+        "example": "開始！Jグランツ 新規募集開始された補助金一覧＜3/30〜4/6＞"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#給付金",
+        "weight": 1
+      },
+      {
+        "tag": "#コロナ支援",
+        "weight": 1
+      },
+      {
+        "tag": "#フリーランス",
+        "weight": 0.54
+      },
+      {
+        "tag": "#中小企業診断士",
+        "weight": 0.46
+      },
+      {
+        "tag": "#経営",
+        "weight": 0.46
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        2,
+        5
+      ],
+      "ctaRate": 10
+    },
+    "ownPerformance": null,
+    "summary": "最も効果的なフック: 損失回避系（「知らないと損」）（重み0.93）。2位: その他（重み0.41）。推奨ハッシュタグ: #給付金 #コロナ支援 #フリーランス"
   }
 ]
