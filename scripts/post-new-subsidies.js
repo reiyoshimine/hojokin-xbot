@@ -10,6 +10,7 @@ import { parseSubsidies, diffSubsidies } from './parse-subsidies.js';
 import {
   buildAmountHooks, buildHooks, CLOSING_LINES,
   buildNewOpeners, buildUpdateOpeners,
+  applyInsightsToHooks, getInsightHashtags,
 } from './tweet-templates.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -22,6 +23,7 @@ const INDEX_PATH = resolve(REPO_ROOT, 'index.html');
 const STATE_DIR = resolve(REPO_ROOT, 'state');
 const STATE_FILE = resolve(STATE_DIR, 'posted.json');
 const HISTORY_FILE = resolve(STATE_DIR, 'history.json');
+const INSIGHTS_FILE = resolve(STATE_DIR, 'buzz-insights.json');
 const DRY_RUN = process.env.DRY_RUN === '1';
 const FORCE_DAILY_PICK = process.env.FORCE_DAILY_PICK === '1';
 const FORCE_POST = process.env.FORCE_POST === '1'; // 同日重複ガードを無視（テスト用）
@@ -163,14 +165,15 @@ function humanize(s, maxLen = 0) {
 /**
  * 新規補助金のポスト本文を生成（フック先頭の人間風文体）
  */
-function buildNewPost(subsidy) {
+function buildNewPost(subsidy, insights) {
   const days = parseDeadlineDays(subsidy.deadline);
   const amt = extractAmountValue(subsidy.amount);
   const amtHooks = buildAmountHooks(amt);
-  const allOpeners = [
+  const rawOpeners = [
     ...buildHooks(subsidy, days, amt, amtHooks, stripHtml),
     ...buildNewOpeners(amt),
   ];
+  const allOpeners = applyInsightsToHooks(rawOpeners, insights);
   const opener = pickVariant(allOpeners, subsidy.id + ':new');
   const closing = pickVariant(CLOSING_LINES, subsidy.id + ':close-new');
 
@@ -251,11 +254,12 @@ function pickDailySubsidy(subsidies) {
 /**
  * 「今日のピックアップ」ポスト本文（フック先頭の人間風文体）
  */
-function buildDailyPickPost(subsidy) {
+function buildDailyPickPost(subsidy, insights) {
   const days = parseDeadlineDays(subsidy.deadline);
   const amt = extractAmountValue(subsidy.amount);
   const amtHooks = buildAmountHooks(amt);
-  const opener = pickVariant(buildHooks(subsidy, days, amt, amtHooks, stripHtml), subsidy.id + ':daily');
+  const rawHooks = buildHooks(subsidy, days, amt, amtHooks, stripHtml);
+  const opener = pickVariant(applyInsightsToHooks(rawHooks, insights), subsidy.id + ':daily');
   const closing = pickVariant(CLOSING_LINES, subsidy.id + ':close-daily');
 
   const lines = [opener, '', subsidy.title];
@@ -415,6 +419,16 @@ async function main() {
     }
   }
 
+  // バズインサイトを読み込み（なければ null で動作に影響なし）
+  let insights = null;
+  try {
+    const raw = await readFile(INSIGHTS_FILE, 'utf-8');
+    insights = JSON.parse(raw);
+    console.log(`   🔬 バズインサイト読み込み済み (サンプル数: ${insights.sampleSize || 0})`);
+  } catch {
+    console.log('   🔬 バズインサイトなし（通常モードで動作）');
+  }
+
   // 旧版（直前のindex.html変更コミット）と新版（現在のindex.html）を比較
   const newHtml = await readFile(INDEX_PATH, 'utf-8');
   const newList = parseSubsidies(newHtml);
@@ -457,11 +471,11 @@ async function main() {
   }
   const best = candidates[0];
 
-  // 本文生成
+  // 本文生成（バズインサイトを反映）
   let text;
-  if (best.type === 'new') text = buildNewPost(best.subsidy);
+  if (best.type === 'new') text = buildNewPost(best.subsidy, insights);
   else if (best.type === 'update') text = buildUpdatePost(best.subsidy);
-  else text = buildDailyPickPost(best.subsidy);
+  else text = buildDailyPickPost(best.subsidy, insights);
 
   console.log(`\n👉 投稿対象: [${best.type}] ${best.subsidy.title}`);
 

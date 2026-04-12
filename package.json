@@ -10,7 +10,9 @@
     "post:weekly": "node scripts/post-weekly-summary.js",
     "test:parse": "node scripts/parse-subsidies.js ../index.html",
     "test:dry-new": "DRY_RUN=1 node scripts/post-new-subsidies.js",
-    "test:dry-weekly": "DRY_RUN=1 node scripts/post-weekly-summary.js"
+    "test:dry-weekly": "DRY_RUN=1 node scripts/post-weekly-summary.js",
+    "research": "node scripts/research-buzz.js",
+    "test:dry-research": "DRY_RUN=1 node scripts/research-buzz.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0",

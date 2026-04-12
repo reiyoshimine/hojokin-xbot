@@ -300,3 +300,50 @@ export function buildUpdateOpeners(deadlineChanged, amountChanged) {
     '気づいたら制度内容にアップデート入ってました。',
   ];
 }
+
+/**
+ * バズインサイトに基づいてフック配列の確率を調整
+ * 高エンゲージメントのパターンに一致するフックを配列内に複製して出現確率を上げる
+ * insights が null の場合は元の配列をそのまま返す
+ */
+export function applyInsightsToHooks(hooks, insights) {
+  if (!insights || !insights.topHookPatterns || hooks.length === 0) return hooks;
+
+  const PATTERN_KEYWORDS = {
+    urgency: /あと\d+日|残り\d+日|締切/,
+    amount: /\d+万円|\d+億円|上限|補助上限|補助額/,
+    loss_aversion: /知らない.?損|もったいない|損してる|見逃/,
+    question: /知ってた|知ってました|ですか？|いませんか/,
+    novelty: /新しく|新規|始まった|出てきた/,
+    sharing: /共有|シェア|メモ|紹介/,
+  };
+
+  const boosted = [...hooks];
+
+  for (const pattern of insights.topHookPatterns) {
+    if (pattern.weight < 0.5) continue; // 低重みは無視
+    const regex = PATTERN_KEYWORDS[pattern.pattern];
+    if (!regex) continue;
+
+    // 重みに応じた複製数（weight 0.8 → 2個追加、1.0 → 3個追加）
+    const copies = Math.floor(pattern.weight * 3);
+    const matching = hooks.filter(h => regex.test(h));
+
+    for (let i = 0; i < copies && matching.length > 0; i++) {
+      boosted.push(matching[i % matching.length]);
+    }
+  }
+
+  return boosted;
+}
+
+/**
+ * バズインサイトからトレンドハッシュタグを取得
+ */
+export function getInsightHashtags(insights) {
+  if (!insights || !insights.topHashtags) return [];
+  return insights.topHashtags
+    .filter(t => t.weight >= 0.5)
+    .slice(0, 3)
+    .map(t => t.tag);
+}
