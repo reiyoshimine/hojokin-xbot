@@ -746,5 +746,84 @@
       "analyzedCount": 1
     },
     "summary": "最も効果的なフック: その他（重み0.46）。2位: 疑問形フック（重み0.77）。推奨ハッシュタグ: #給付金 #コロナ支援 #補助金あるある。自アカウント平均いいね: 1"
+  },
+  {
+    "date": "2026-04-13T21:55:54.343Z",
+    "sources": {
+      "webSearch": 15,
+      "seeds": 10,
+      "ownApi": 20,
+      "search": 0,
+      "history": 7,
+      "total": 45
+    },
+    "hookRanking": [
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.92,
+        "count": 3,
+        "example": "知らないと損！2025年に使える補助金・助成金まとめ🔥"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.48,
+        "count": 31,
+        "example": "【IT導入補助金2025】採択率95%でサポートしてます！"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.73,
+        "count": 3,
+        "example": "補助額が変わってたのでお知らせ。"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.58,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0.04,
+        "count": 4,
+        "example": "【新設補助金】2025年から始まった「中小企業成長加速化補助金」"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#キャリアアップ助成金",
+        "weight": 1
+      },
+      {
+        "tag": "#採用",
+        "weight": 1
+      },
+      {
+        "tag": "#中小企業診断士",
+        "weight": 0.93
+      },
+      {
+        "tag": "#飲食店",
+        "weight": 0.81
+      },
+      {
+        "tag": "#DX",
+        "weight": 0.58
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        4,
+        6
+      ],
+      "ctaRate": 9
+    },
+    "ownPerformance": {
+      "bestTweetId": "2043310878037066035",
+      "bestTweetLikes": 1,
+      "avgLikes": 1,
+      "analyzedCount": 1
+    },
+    "summary": "最も効果的なフック: 損失回避系（「知らないと損」）（重み0.92）。2位: その他（重み0.48）。推奨ハッシュタグ: #キャリアアップ助成金 #採用 #中小企業診断士。自アカウント平均いいね: 1"
   }
 ]
