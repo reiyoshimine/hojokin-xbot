@@ -667,5 +667,84 @@
       "analyzedCount": 1
     },
     "summary": "最も効果的なフック: 損失回避系（「知らないと損」）（重み0.93）。2位: その他（重み0.44）。推奨ハッシュタグ: #知らないと損 #経営者必見 #注意事項。自アカウント平均いいね: 1"
+  },
+  {
+    "date": "2026-04-13T10:25:57.198Z",
+    "sources": {
+      "webSearch": 15,
+      "seeds": 10,
+      "ownApi": 20,
+      "search": 0,
+      "history": 7,
+      "total": 45
+    },
+    "hookRanking": [
+      {
+        "pattern": "other",
+        "weight": 0.46,
+        "count": 29,
+        "example": "【4月以降の厚生労働省助成金 主な変更点】"
+      },
+      {
+        "pattern": "question",
+        "weight": 0.77,
+        "count": 2,
+        "example": "補助金・助成金って「大企業向け」と思っていませんか？実は中小企業・個人事業主・NPOこそ対象になる制度が山ほどある。弊社"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.75,
+        "count": 4,
+        "example": "CEV補助金制度を活用すれば、電気自動車がお得に購入できるって知っていましたか？🚙 国からの補助金（65万円）＋各地方"
+      },
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.92,
+        "count": 3,
+        "example": "【知らないと損】IT導入補助金2025、採択率95%です。中小企業・フリーランスの方、ソフトウェア導入費用の最大75%が"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.59,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#給付金",
+        "weight": 1
+      },
+      {
+        "tag": "#コロナ支援",
+        "weight": 1
+      },
+      {
+        "tag": "#補助金あるある",
+        "weight": 0.51
+      },
+      {
+        "tag": "#EV",
+        "weight": 0.23
+      },
+      {
+        "tag": "#助成金",
+        "weight": 0.2
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        1,
+        5
+      ],
+      "ctaRate": 27
+    },
+    "ownPerformance": {
+      "bestTweetId": "2043310878037066035",
+      "bestTweetLikes": 1,
+      "avgLikes": 1,
+      "analyzedCount": 1
+    },
+    "summary": "最も効果的なフック: その他（重み0.46）。2位: 疑問形フック（重み0.77）。推奨ハッシュタグ: #給付金 #コロナ支援 #補助金あるある。自アカウント平均いいね: 1"
   }
 ]
