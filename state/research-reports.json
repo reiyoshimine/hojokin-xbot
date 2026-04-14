@@ -904,5 +904,84 @@
       "analyzedCount": 1
     },
     "summary": "最も効果的なフック: 損失回避系（「知らないと損」）（重み0.92）。2位: その他（重み0.50）。推奨ハッシュタグ: #GビズID #経営者 #経営。自アカウント平均いいね: 1"
+  },
+  {
+    "date": "2026-04-14T21:57:18.901Z",
+    "sources": {
+      "webSearch": 15,
+      "seeds": 10,
+      "ownApi": 20,
+      "search": 0,
+      "history": 7,
+      "total": 45
+    },
+    "hookRanking": [
+      {
+        "pattern": "amount",
+        "weight": 0.72,
+        "count": 8,
+        "example": "CEV補助金制度を活用すれば、テスラがお得に購入できるって知っていましたか？🚙 国からの補助金（65万円）と、各地方自"
+      },
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.9,
+        "count": 3,
+        "example": "【知らないと損】補助金と助成金の最大の違い👇"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.5,
+        "count": 27,
+        "example": "半導体工場、新増設ラッシュ 補助金４兆円が呼び水―経済安保で高まる重要性。政府は安定供給のため、工場誘致に２０２１～２３"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.54,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0.04,
+        "count": 3,
+        "example": "【新規募集開始】Jグランツで募集開始された補助金一覧＜3/30～4/6＞"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#業務改善助成金",
+        "weight": 1
+      },
+      {
+        "tag": "#賃上げ",
+        "weight": 1
+      },
+      {
+        "tag": "#社労士",
+        "weight": 0.21
+      },
+      {
+        "tag": "#キャリアアップ助成金",
+        "weight": 0.96
+      },
+      {
+        "tag": "#中小企業経営",
+        "weight": 0.44
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        1,
+        2
+      ],
+      "ctaRate": 9
+    },
+    "ownPerformance": {
+      "bestTweetId": "2043310878037066035",
+      "bestTweetLikes": 1,
+      "avgLikes": 1,
+      "analyzedCount": 1
+    },
+    "summary": "最も効果的なフック: 金額インパクト系（重み0.72）。2位: 損失回避系（「知らないと損」）（重み0.90）。推奨ハッシュタグ: #業務改善助成金 #賃上げ #社労士。自アカウント平均いいね: 1"
   }
 ]
