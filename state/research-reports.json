@@ -825,5 +825,84 @@
       "analyzedCount": 1
     },
     "summary": "最も効果的なフック: 損失回避系（「知らないと損」）（重み0.92）。2位: その他（重み0.48）。推奨ハッシュタグ: #キャリアアップ助成金 #採用 #中小企業診断士。自アカウント平均いいね: 1"
+  },
+  {
+    "date": "2026-04-14T10:06:31.910Z",
+    "sources": {
+      "webSearch": 15,
+      "seeds": 10,
+      "ownApi": 20,
+      "search": 0,
+      "history": 7,
+      "total": 45
+    },
+    "hookRanking": [
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.92,
+        "count": 3,
+        "example": "知らないと損する！"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.5,
+        "count": 32,
+        "example": "【拡散希望】IT導入補助金2025、採択率95%超で通過してます✅"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.71,
+        "count": 3,
+        "example": "補助額が変わってたのでお知らせ。"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.56,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0.04,
+        "count": 3,
+        "example": "【Jグランツ新規受付開始】3/30〜4/6スタートの補助金一覧📋"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#GビズID",
+        "weight": 1
+      },
+      {
+        "tag": "#経営者",
+        "weight": 1
+      },
+      {
+        "tag": "#経営",
+        "weight": 0.81
+      },
+      {
+        "tag": "#補助金詐欺",
+        "weight": 0.55
+      },
+      {
+        "tag": "#生成AI",
+        "weight": 0.64
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        5,
+        6
+      ],
+      "ctaRate": 36
+    },
+    "ownPerformance": {
+      "bestTweetId": "2043310878037066035",
+      "bestTweetLikes": 1,
+      "avgLikes": 1,
+      "analyzedCount": 1
+    },
+    "summary": "最も効果的なフック: 損失回避系（「知らないと損」）（重み0.92）。2位: その他（重み0.50）。推奨ハッシュタグ: #GビズID #経営者 #経営。自アカウント平均いいね: 1"
   }
 ]
