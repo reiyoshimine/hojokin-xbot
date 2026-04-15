@@ -1062,5 +1062,84 @@
       "analyzedCount": 1
     },
     "summary": "最も効果的なフック: 疑問形フック（重み1.00）。2位: その他（重み0.49）。推奨ハッシュタグ: #補助金診断 #落とし穴 #経営者向け。自アカウント平均いいね: 1"
+  },
+  {
+    "date": "2026-04-15T21:58:12.255Z",
+    "sources": {
+      "webSearch": 15,
+      "seeds": 10,
+      "ownApi": 20,
+      "search": 0,
+      "history": 8,
+      "total": 45
+    },
+    "hookRanking": [
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.88,
+        "count": 4,
+        "example": "【知らないと損】補助金・助成金は「申請主義」。存在を知らなければ1円ももらえません。中小企業向けだけでも年間3万件以上の"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.5,
+        "count": 29,
+        "example": "補助金と助成金の違い、説明できますか？"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.69,
+        "count": 5,
+        "example": "【経営者必見】パートしかいない会社でももらえる助成金があります。キャリアアップ助成金の「正社員化コース」は、アルバイトを"
+      },
+      {
+        "pattern": "question",
+        "weight": 0.97,
+        "count": 1,
+        "example": "補助金申請、「難しそう」で諦めていませんか？"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.51,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#知らないと損",
+        "weight": 1
+      },
+      {
+        "tag": "#経営者必見",
+        "weight": 1
+      },
+      {
+        "tag": "#補助金詐欺",
+        "weight": 0.88
+      },
+      {
+        "tag": "#経営者注意",
+        "weight": 0.88
+      },
+      {
+        "tag": "#助成金まとめ",
+        "weight": 0.77
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        1,
+        5
+      ],
+      "ctaRate": 27
+    },
+    "ownPerformance": {
+      "bestTweetId": "2043310878037066035",
+      "bestTweetLikes": 1,
+      "avgLikes": 1,
+      "analyzedCount": 1
+    },
+    "summary": "最も効果的なフック: 損失回避系（「知らないと損」）（重み0.88）。2位: その他（重み0.50）。推奨ハッシュタグ: #知らないと損 #経営者必見 #補助金詐欺。自アカウント平均いいね: 1"
   }
 ]
