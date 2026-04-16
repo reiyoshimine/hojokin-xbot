@@ -1220,5 +1220,84 @@
       "analyzedCount": 1
     },
     "summary": "最も効果的なフック: その他（重み0.52）。2位: 金額インパクト系（重み0.70）。推奨ハッシュタグ: #雇用調整助成金 #失敗談 #給付金。自アカウント平均いいね: 1"
+  },
+  {
+    "date": "2026-04-16T21:52:08.975Z",
+    "sources": {
+      "webSearch": 15,
+      "seeds": 10,
+      "ownApi": 18,
+      "search": 0,
+      "history": 9,
+      "total": 43
+    },
+    "hookRanking": [
+      {
+        "pattern": "other",
+        "weight": 0.55,
+        "count": 27,
+        "example": "4月以降の厚生労働省の助成金、主な変更点4選！"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.71,
+        "count": 6,
+        "example": "クロスオーバーEVになった日産リーフが登場！今なら補助金129万円！自治体や税金の優遇策も合わせると実質負担がかなり下が"
+      },
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.85,
+        "count": 3,
+        "example": "【知らないと損】IT導入補助金2025、採択率95%超えてます。申請書類さえ整えれば中小企業でもほぼ通る。うちは今期12"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.48,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0.07,
+        "count": 3,
+        "example": "開始！Jグランツ 新規募集開始された補助金一覧＜3/30～4/6＞"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#給付金",
+        "weight": 0.83
+      },
+      {
+        "tag": "#持続化補助金",
+        "weight": 0.38
+      },
+      {
+        "tag": "#雇用調整助成金",
+        "weight": 0.97
+      },
+      {
+        "tag": "#助成金",
+        "weight": 0.4
+      },
+      {
+        "tag": "#採用",
+        "weight": 0.28
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        1,
+        2
+      ],
+      "ctaRate": 10
+    },
+    "ownPerformance": {
+      "bestTweetId": "2043310878037066035",
+      "bestTweetLikes": 1,
+      "avgLikes": 1,
+      "analyzedCount": 1
+    },
+    "summary": "最も効果的なフック: その他（重み0.55）。2位: 金額インパクト系（重み0.71）。推奨ハッシュタグ: #給付金 #持続化補助金 #雇用調整助成金。自アカウント平均いいね: 1"
   }
 ]
