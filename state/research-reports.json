@@ -1141,5 +1141,84 @@
       "analyzedCount": 1
     },
     "summary": "最も効果的なフック: 損失回避系（「知らないと損」）（重み0.88）。2位: その他（重み0.50）。推奨ハッシュタグ: #知らないと損 #経営者必見 #補助金詐欺。自アカウント平均いいね: 1"
+  },
+  {
+    "date": "2026-04-16T10:06:07.115Z",
+    "sources": {
+      "webSearch": 15,
+      "seeds": 10,
+      "ownApi": 20,
+      "search": 0,
+      "history": 9,
+      "total": 45
+    },
+    "hookRanking": [
+      {
+        "pattern": "other",
+        "weight": 0.52,
+        "count": 24,
+        "example": "補助金申請のポイントをまとめました。✅事業計画書は「誰が読んでも分かる」言葉で✅加点項目を全て埋める✅締切の1週間前には"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.7,
+        "count": 9,
+        "example": "【知らないと損】中小企業が使える補助金・助成金、実はこんなにあります。①ものづくり補助金（最大1,250万円）②IT導入"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0.06,
+        "count": 3,
+        "example": "IT系の補助金詐欺、本当に多いですね。「生成AI！研修！助成金！」と謳う会社がすべて不正ではないですが、厚生労働省から数"
+      },
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.85,
+        "count": 5,
+        "example": "【Jグランツ 新規募集開始された補助金一覧 3/30〜4/6】・二酸化炭素排出抑制対策事業費等補助金・太陽光パネルリサイ"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.49,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#雇用調整助成金",
+        "weight": 1
+      },
+      {
+        "tag": "#失敗談",
+        "weight": 0.95
+      },
+      {
+        "tag": "#給付金",
+        "weight": 0.82
+      },
+      {
+        "tag": "#コロナ支援",
+        "weight": 0.82
+      },
+      {
+        "tag": "#経営",
+        "weight": 0.53
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        1,
+        1
+      ],
+      "ctaRate": 27
+    },
+    "ownPerformance": {
+      "bestTweetId": "2043310878037066035",
+      "bestTweetLikes": 1,
+      "avgLikes": 1,
+      "analyzedCount": 1
+    },
+    "summary": "最も効果的なフック: その他（重み0.52）。2位: 金額インパクト系（重み0.70）。推奨ハッシュタグ: #雇用調整助成金 #失敗談 #給付金。自アカウント平均いいね: 1"
   }
 ]
