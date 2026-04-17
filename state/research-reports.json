@@ -1299,5 +1299,84 @@
       "analyzedCount": 1
     },
     "summary": "最も効果的なフック: その他（重み0.55）。2位: 金額インパクト系（重み0.71）。推奨ハッシュタグ: #給付金 #持続化補助金 #雇用調整助成金。自アカウント平均いいね: 1"
+  },
+  {
+    "date": "2026-04-17T10:04:09.511Z",
+    "sources": {
+      "webSearch": 15,
+      "seeds": 10,
+      "ownApi": 18,
+      "search": 0,
+      "history": 10,
+      "total": 43
+    },
+    "hookRanking": [
+      {
+        "pattern": "amount",
+        "weight": 0.73,
+        "count": 12,
+        "example": "【知らないと損】中小企業省力化投資補助金、IoTやロボットの導入費用を最大1億円まで補助してくれる制度です。カタログ型な"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.56,
+        "count": 22,
+        "example": "IT系の補助金・助成金詐欺が増えています。「生成AI！研修！助成金！」と謳う会社がすべて不正ではないですが、厚労省から数"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.48,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.82,
+        "count": 2,
+        "example": "開業1年以内の人、これ知らないと純粋にもったいない。"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0.06,
+        "count": 3,
+        "example": "【Jグランツ】新規募集が開始された補助金一覧（3/30〜4/6）"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#賃上げ",
+        "weight": 1
+      },
+      {
+        "tag": "#補助金詐欺",
+        "weight": 0.95
+      },
+      {
+        "tag": "#税務",
+        "weight": 0.78
+      },
+      {
+        "tag": "#育休",
+        "weight": 0.62
+      },
+      {
+        "tag": "#働き方改革",
+        "weight": 0.62
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        1,
+        4
+      ],
+      "ctaRate": 20
+    },
+    "ownPerformance": {
+      "bestTweetId": "2043310878037066035",
+      "bestTweetLikes": 1,
+      "avgLikes": 1,
+      "analyzedCount": 1
+    },
+    "summary": "最も効果的なフック: 金額インパクト系（重み0.73）。2位: その他（重み0.56）。推奨ハッシュタグ: #賃上げ #補助金詐欺 #税務。自アカウント平均いいね: 1"
   }
 ]
