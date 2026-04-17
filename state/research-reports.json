@@ -1378,5 +1378,84 @@
       "analyzedCount": 1
     },
     "summary": "最も効果的なフック: 金額インパクト系（重み0.73）。2位: その他（重み0.56）。推奨ハッシュタグ: #賃上げ #補助金詐欺 #税務。自アカウント平均いいね: 1"
+  },
+  {
+    "date": "2026-04-17T21:52:28.750Z",
+    "sources": {
+      "webSearch": 15,
+      "seeds": 10,
+      "ownApi": 18,
+      "search": 0,
+      "history": 10,
+      "total": 43
+    },
+    "hookRanking": [
+      {
+        "pattern": "amount",
+        "weight": 0.74,
+        "count": 7,
+        "example": "キャリアアップ助成金、非正規→正社員化で1人あたり最大80万円支給されます。条件：雇用保険適用事業所であること、6ヶ月以"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.56,
+        "count": 26,
+        "example": "変更！4月以降の厚生労働省の助成金 主な変更点や新設4選！"
+      },
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.81,
+        "count": 3,
+        "example": "【知らないと損】ものづくり補助金2025年版の主な変更点"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.47,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0.06,
+        "count": 3,
+        "example": "開始！Jグランツ 新規募集開始された補助金一覧＜3/30～4/6＞"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#キャリアアップ助成金",
+        "weight": 1
+      },
+      {
+        "tag": "#人事労務",
+        "weight": 1
+      },
+      {
+        "tag": "#経営",
+        "weight": 0.72
+      },
+      {
+        "tag": "#助成金",
+        "weight": 0.41
+      },
+      {
+        "tag": "#小規模事業者",
+        "weight": 0.43
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        1,
+        5
+      ],
+      "ctaRate": 30
+    },
+    "ownPerformance": {
+      "bestTweetId": "2043310878037066035",
+      "bestTweetLikes": 1,
+      "avgLikes": 1,
+      "analyzedCount": 1
+    },
+    "summary": "最も効果的なフック: 金額インパクト系（重み0.74）。2位: その他（重み0.56）。推奨ハッシュタグ: #キャリアアップ助成金 #人事労務 #経営。自アカウント平均いいね: 1"
   }
 ]
