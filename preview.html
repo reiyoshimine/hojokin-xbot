@@ -59,10 +59,10 @@
   .controls button:hover { background: #e8f5fd; border-color: #1da1f2; }
   .controls button.active { background: #1da1f2; color: #fff; border-color: #1da1f2; }
   .stats {
-    display: flex;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
     margin-bottom: 20px;
-    flex-wrap: wrap;
   }
   .stat-box {
     background: #fff;
@@ -135,6 +135,7 @@
   .type-new { background: #e8f5e9; color: #2e7d32; }
   .type-update { background: #fff3e0; color: #e65100; }
   .type-daily { background: #e3f2fd; color: #1565c0; }
+  .type-casual { background: #f3e5f5; color: #7b1fa2; }
   .tweet-link {
     font-size: 12px;
     color: #1da1f2;
@@ -308,6 +309,7 @@
       <button data-filter="new">新規</button>
       <button data-filter="update">更新</button>
       <button data-filter="daily">ピックアップ</button>
+      <button data-filter="casual">つぶやき</button>
     </div>
     <div id="feed"></div>
   </div>
@@ -327,8 +329,8 @@
 
 <script>
 // --- 共通 ---
-const TYPE_LABELS = { new: '新規', update: '更新', daily: 'ピックアップ' };
-const TYPE_CLASS = { new: 'type-new', update: 'type-update', daily: 'type-daily' };
+const TYPE_LABELS = { new: '新規', update: '更新', daily: 'ピックアップ', casual: 'つぶやき' };
+const TYPE_CLASS = { new: 'type-new', update: 'type-update', daily: 'type-daily', casual: 'type-casual' };
 const PATTERN_LABELS = {
   urgency: '締切カウントダウン',
   amount: '金額インパクト',
@@ -369,13 +371,14 @@ function tweetDisplayLen(text) {
 // --- 投稿タブ ---
 function renderStats(history) {
   const total = history.length;
-  const counts = { new: 0, update: 0, daily: 0 };
+  const counts = { new: 0, update: 0, daily: 0, casual: 0 };
   history.forEach(h => counts[h.type] = (counts[h.type] || 0) + 1);
   document.getElementById('stats').innerHTML = `
     <div class="stat-box"><div class="stat-num">${total}</div><div class="stat-label">総投稿数</div></div>
     <div class="stat-box"><div class="stat-num">${counts.new}</div><div class="stat-label">新規</div></div>
     <div class="stat-box"><div class="stat-num">${counts.update}</div><div class="stat-label">更新</div></div>
     <div class="stat-box"><div class="stat-num">${counts.daily}</div><div class="stat-label">ピックアップ</div></div>
+    <div class="stat-box"><div class="stat-num">${counts.casual}</div><div class="stat-label">つぶやき</div></div>
   `;
 }
 
@@ -469,7 +472,7 @@ function renderReports(reports) {
 }
 
 // --- バズコレクションタブ ---
-const SOURCE_LABELS = { own: '自ツイート', search: '検索', seeds: 'シード', history: '履歴', own_with_metrics: '自ツイート' };
+const SOURCE_LABELS = { own: '自ツイート', search: '検索', seeds: 'シード', history: '履歴', own_with_metrics: '自ツイート', web_search: 'Web検索', manual: 'シード' };
 
 function renderBuzzStats(collection) {
   const el = document.getElementById('buzz-stats');
