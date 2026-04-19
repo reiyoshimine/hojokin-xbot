@@ -1694,5 +1694,84 @@
       "analyzedCount": 1
     },
     "summary": "最も効果的なフック: 締切カウントダウン系（重み0.55）。2位: 損失回避系（「知らないと損」）（重み0.82）。推奨ハッシュタグ: #個人事業主 #中小企業支援 #中小企業。自アカウント平均いいね: 1"
+  },
+  {
+    "date": "2026-04-19T21:42:01.612Z",
+    "sources": {
+      "webSearch": 0,
+      "seeds": 10,
+      "ownApi": 18,
+      "search": 0,
+      "history": 12,
+      "total": 28
+    },
+    "hookRanking": [
+      {
+        "pattern": "urgency",
+        "weight": 0.57,
+        "count": 3,
+        "example": "補助上限250万円の制度、締切まであと18日。これは見逃したくない。"
+      },
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.82,
+        "count": 2,
+        "example": "開業1年以内の人、これ知らないと純粋にもったいない。"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.75,
+        "count": 5,
+        "example": "補助上限9万円の制度、対象なら絶対使った方がいい。"
+      },
+      {
+        "pattern": "other",
+        "weight": 0.57,
+        "count": 15,
+        "example": "今週の補助金まとめ（4/12〜4/19）。"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0.05,
+        "count": 2,
+        "example": "新しく出てきた一件、これは結構良さそう。"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#個人事業主",
+        "weight": 0.49
+      },
+      {
+        "tag": "#中小企業支援",
+        "weight": 0.56
+      },
+      {
+        "tag": "#中小企業",
+        "weight": 0.51
+      },
+      {
+        "tag": "#開業医",
+        "weight": 0.39
+      },
+      {
+        "tag": "#クリニック開業",
+        "weight": 0.39
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        5,
+        7
+      ],
+      "ctaRate": 57
+    },
+    "ownPerformance": {
+      "bestTweetId": "2043310878037066035",
+      "bestTweetLikes": 1,
+      "avgLikes": 1,
+      "analyzedCount": 1
+    },
+    "summary": "最も効果的なフック: 締切カウントダウン系（重み0.57）。2位: 損失回避系（「知らないと損」）（重み0.82）。推奨ハッシュタグ: #個人事業主 #中小企業支援 #中小企業。自アカウント平均いいね: 1"
   }
 ]
