@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "lastUpdated": "2026-04-22T10:09:05.435Z",
-  "sampleSize": 1012,
+  "lastUpdated": "2026-04-22T21:54:47.093Z",
+  "sampleSize": 1040,
   "topHookPatterns": [
     {
       "pattern": "loss_aversion",
-      "weight": 0.8592763126403858,
+      "weight": 0.8663124970083665,
       "avgEngagement": 1118.75,
       "count": 2,
       "examples": [
@@ -15,7 +15,7 @@
     },
     {
       "pattern": "amount",
-      "weight": 0.775854205792199,
+      "weight": 0.7804089815361086,
       "avgEngagement": 969.9,
       "count": 5,
       "examples": [
@@ -26,9 +26,9 @@
     },
     {
       "pattern": "other",
-      "weight": 0.6114704919059528,
-      "avgEngagement": 879.3333333333334,
-      "count": 15,
+      "weight": 0.6230039106466487,
+      "avgEngagement": 942.1428571428571,
+      "count": 14,
       "examples": [
         "今週の補助金まとめ（4/12〜4/19）。",
         "普通に良い制度なのに、なぜか知名度低めなやつ。",
@@ -37,7 +37,7 @@
     },
     {
       "pattern": "urgency",
-      "weight": 0.6285524766615765,
+      "weight": 0.631851109811738,
       "avgEngagement": 777,
       "count": 5,
       "examples": [
@@ -48,83 +48,74 @@
     },
     {
       "pattern": "novelty",
-      "weight": 0.040106780654417716,
+      "weight": 0.038101441621696826,
       "avgEngagement": 0,
       "count": 2,
       "examples": [
         "新しく出てきた一件、これは結構良さそう。",
         "新しく出てきた一件、これは結構良さそう。"
       ]
-    },
-    {
-      "pattern": "sharing",
-      "weight": 0,
-      "avgEngagement": 0,
-      "count": 1,
-      "examples": [
-        "前に紹介したやつ、締切が確定したので改めて共有。"
-      ]
     }
   ],
   "topHashtags": [
     {
       "tag": "#個人事業主",
-      "weight": 0.6057395647830773,
-      "frequency": 0.03333333333333333,
+      "weight": 0.6254525865439234,
+      "frequency": 0.03571428571428571,
       "count": 1
     },
     {
       "tag": "#中小企業支援",
-      "weight": 0.552287689683694,
-      "frequency": 0.03333333333333333,
+      "weight": 0.5514777744732523,
+      "frequency": 0.03571428571428571,
       "count": 1
     },
     {
       "tag": "#中小企業",
-      "weight": 0.5042524151731704,
-      "frequency": 0.06666666666666667,
+      "weight": 0.5040397944145119,
+      "frequency": 0.07142857142857142,
       "count": 2
     },
     {
       "tag": "#開業医",
-      "weight": 0.3881438285980442,
-      "frequency": 0.03333333333333333,
+      "weight": 0.3875746259949576,
+      "frequency": 0.03571428571428571,
       "count": 1
     },
     {
       "tag": "#クリニック開業",
-      "weight": 0.3881438285980442,
-      "frequency": 0.03333333333333333,
+      "weight": 0.3875746259949576,
+      "frequency": 0.03571428571428571,
       "count": 1
     },
     {
       "tag": "#補助金",
-      "weight": 0.3254748010393103,
-      "frequency": 0.2,
+      "weight": 0.32514147067077126,
+      "frequency": 0.21428571428571427,
       "count": 6
     },
     {
       "tag": "#給付金",
       "weight": 0,
-      "frequency": 0.03333333333333333,
+      "frequency": 0.03571428571428571,
       "count": 1
     },
     {
       "tag": "#持続化補助金",
       "weight": 0,
-      "frequency": 0.03333333333333333,
+      "frequency": 0.03571428571428571,
       "count": 1
     },
     {
       "tag": "#経営者必見",
       "weight": 0,
-      "frequency": 0.03333333333333333,
+      "frequency": 0.03571428571428571,
       "count": 1
     },
     {
       "tag": "#フリーランス",
       "weight": 0,
-      "frequency": 0.03333333333333333,
+      "frequency": 0.03571428571428571,
       "count": 1
     }
   ],
