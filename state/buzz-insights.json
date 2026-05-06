@@ -1,22 +1,22 @@
 {
   "version": 1,
-  "lastUpdated": "2026-05-05T22:04:46.368Z",
-  "sampleSize": 1898,
+  "lastUpdated": "2026-05-06T10:53:52.912Z",
+  "sampleSize": 1938,
   "topHookPatterns": [
     {
       "pattern": "other",
-      "weight": 0.8737321984011808,
-      "avgEngagement": 879.2333333333333,
-      "count": 15,
+      "weight": 0.8800455884811217,
+      "avgEngagement": 824.28125,
+      "count": 16,
       "examples": [
+        "普通に良い制度なのに、なぜか知名度低めなやつ。",
         "今週の補助金まとめ（4/26〜5/3）。",
-        "従業員の処遇改善や育成に使える制度、見落としてる人多い。",
-        "前に出てた補助金、締切情報が更新されてたので追記。"
+        "従業員の処遇改善や育成に使える制度、見落としてる人多い。"
       ]
     },
     {
       "pattern": "loss_aversion",
-      "weight": 0.8840202350566921,
+      "weight": 0.885060658392508,
       "avgEngagement": 745.8333333333334,
       "count": 3,
       "examples": [
@@ -27,7 +27,7 @@
     },
     {
       "pattern": "urgency",
-      "weight": 0.6453551708515843,
+      "weight": 0.6467531059056992,
       "avgEngagement": 555,
       "count": 7,
       "examples": [
@@ -38,7 +38,7 @@
     },
     {
       "pattern": "amount",
-      "weight": 0.6221727772150383,
+      "weight": 0.6178064448403089,
       "avgEngagement": 440.8636363636364,
       "count": 11,
       "examples": [
@@ -58,7 +58,7 @@
     },
     {
       "pattern": "novelty",
-      "weight": 0.010040495495430506,
+      "weight": 0.00953847072065898,
       "avgEngagement": 0,
       "count": 2,
       "examples": [
@@ -70,62 +70,62 @@
   "topHashtags": [
     {
       "tag": "#個人事業主",
-      "weight": 0.9012992302241554,
-      "frequency": 0.02564102564102564,
+      "weight": 0.9062342687129477,
+      "frequency": 0.025,
       "count": 1
     },
     {
       "tag": "#中小企業支援",
-      "weight": 0.5401445351973918,
-      "frequency": 0.02564102564102564,
+      "weight": 0.5399417777112652,
+      "frequency": 0.025,
       "count": 1
     },
     {
       "tag": "#中小企業",
-      "weight": 0.5010645670057345,
-      "frequency": 0.05128205128205128,
+      "weight": 0.5010113386554478,
+      "frequency": 0.05,
       "count": 2
     },
     {
       "tag": "#開業医",
-      "weight": 0.37960970668728755,
-      "frequency": 0.02564102564102564,
+      "weight": 0.3794672101797388,
+      "frequency": 0.025,
       "count": 1
     },
     {
       "tag": "#クリニック開業",
-      "weight": 0.37960970668728755,
-      "frequency": 0.02564102564102564,
+      "weight": 0.3794672101797388,
+      "frequency": 0.025,
       "count": 1
     },
     {
       "tag": "#補助金",
-      "weight": 0.32047713942243766,
-      "frequency": 0.15384615384615385,
+      "weight": 0.3203936921347422,
+      "frequency": 0.15,
       "count": 6
-    },
-    {
-      "tag": "#給付金",
-      "weight": 0,
-      "frequency": 0.02564102564102564,
-      "count": 1
-    },
-    {
-      "tag": "#持続化補助金",
-      "weight": 0,
-      "frequency": 0.02564102564102564,
-      "count": 1
     },
     {
       "tag": "#フリーランス",
       "weight": 0,
-      "frequency": 0.02564102564102564,
+      "frequency": 0.025,
       "count": 1
     },
     {
       "tag": "#経営者必見",
       "weight": 0,
-      "frequency": 0.02564102564102564,
+      "frequency": 0.025,
+      "count": 1
+    },
+    {
+      "tag": "#給付金",
+      "weight": 0,
+      "frequency": 0.025,
+      "count": 1
+    },
+    {
+      "tag": "#持続化補助金",
+      "weight": 0,
+      "frequency": 0.025,
       "count": 1
     }
   ],
@@ -135,7 +135,7 @@
       6
     ],
     "avgEmojiDensity": 0,
-    "ctaRate": 0.4444444444444444
+    "ctaRate": 0.4
   },
   "ownPerformance": {
     "bestTweetId": "2050798119189631182",
