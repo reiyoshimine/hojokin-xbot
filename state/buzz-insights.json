@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "lastUpdated": "2026-05-07T22:05:46.655Z",
-  "sampleSize": 2060,
+  "lastUpdated": "2026-05-08T10:14:18.935Z",
+  "sampleSize": 2101,
   "topHookPatterns": [
     {
       "pattern": "other",
-      "weight": 0.8971540864240017,
-      "avgEngagement": 775.8529411764706,
-      "count": 17,
+      "weight": 0.9022963821028016,
+      "avgEngagement": 824.71875,
+      "count": 16,
       "examples": [
         "医療・ヘルスケア系の補助金、対象なら申請する価値あり。",
         "普通に良い制度なのに、なぜか知名度低めなやつ。",
@@ -16,7 +16,7 @@
     },
     {
       "pattern": "loss_aversion",
-      "weight": 0.8933867687220438,
+      "weight": 0.8939348655227016,
       "avgEngagement": 745.8333333333334,
       "count": 3,
       "examples": [
@@ -27,7 +27,7 @@
     },
     {
       "pattern": "urgency",
-      "weight": 0.6546390531859806,
+      "weight": 0.6555549350157119,
       "avgEngagement": 555,
       "count": 7,
       "examples": [
@@ -38,7 +38,7 @@
     },
     {
       "pattern": "amount",
-      "weight": 0.609229247679258,
+      "weight": 0.6054959054188909,
       "avgEngagement": 440.8636363636364,
       "count": 11,
       "examples": [
@@ -49,16 +49,17 @@
     },
     {
       "pattern": "sharing",
-      "weight": 0,
-      "avgEngagement": 0,
-      "count": 1,
+      "weight": 0.00009094009321359562,
+      "avgEngagement": 1.5,
+      "count": 2,
       "examples": [
+        "前に紹介した補助金、内容追記があったので共有。",
         "北海道の人だけ使える補助金、見つけたので共有。"
       ]
     },
     {
       "pattern": "novelty",
-      "weight": 0.008178046334124991,
+      "weight": 0.007769144017418741,
       "avgEngagement": 0,
       "count": 2,
       "examples": [
@@ -70,37 +71,37 @@
   "topHashtags": [
     {
       "tag": "#個人事業主",
-      "weight": 0.9196076061377635,
+      "weight": 0.9236272258308753,
       "frequency": 0.024390243902439025,
       "count": 1
     },
     {
       "tag": "#中小企業支援",
-      "weight": 0.5393923302685479,
+      "weight": 0.5392271830288635,
       "frequency": 0.024390243902439025,
       "count": 1
     },
     {
       "tag": "#中小企業",
-      "weight": 0.5008670964797145,
+      "weight": 0.5008237416557288,
       "frequency": 0.04878048780487805,
       "count": 2
     },
     {
       "tag": "#開業医",
-      "weight": 0.3790810624563451,
+      "weight": 0.37896499816034346,
       "frequency": 0.024390243902439025,
       "count": 1
     },
     {
       "tag": "#クリニック開業",
-      "weight": 0.3790810624563451,
+      "weight": 0.37896499816034346,
       "frequency": 0.024390243902439025,
       "count": 1
     },
     {
       "tag": "#補助金",
-      "weight": 0.3201675604159986,
+      "weight": 0.3200995920786251,
       "frequency": 0.14634146341463414,
       "count": 6
     },
@@ -139,8 +140,8 @@
   },
   "ownPerformance": {
     "bestTweetId": "2051876300881617279",
-    "bestTweetLikes": 1,
-    "avgLikes": 1,
-    "analyzedCount": 2
+    "bestTweetLikes": 2,
+    "avgLikes": 1.3,
+    "analyzedCount": 4
   }
 }
