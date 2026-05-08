@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "lastUpdated": "2026-05-08T10:14:18.935Z",
-  "sampleSize": 2101,
+  "lastUpdated": "2026-05-08T22:02:15.909Z",
+  "sampleSize": 2142,
   "topHookPatterns": [
     {
       "pattern": "other",
-      "weight": 0.9022963821028016,
-      "avgEngagement": 824.71875,
+      "weight": 0.9071815629976615,
+      "avgEngagement": 824.59375,
       "count": 16,
       "examples": [
         "医療・ヘルスケア系の補助金、対象なら申請する価値あり。",
@@ -16,7 +16,7 @@
     },
     {
       "pattern": "loss_aversion",
-      "weight": 0.8939348655227016,
+      "weight": 0.8944624119852005,
       "avgEngagement": 745.8333333333334,
       "count": 3,
       "examples": [
@@ -27,7 +27,7 @@
     },
     {
       "pattern": "urgency",
-      "weight": 0.6555549350157119,
+      "weight": 0.6564301234223903,
       "avgEngagement": 555,
       "count": 7,
       "examples": [
@@ -38,7 +38,7 @@
     },
     {
       "pattern": "amount",
-      "weight": 0.6054959054188909,
+      "weight": 0.6019532819818728,
       "avgEngagement": 440.8636363636364,
       "count": 11,
       "examples": [
@@ -49,7 +49,7 @@
     },
     {
       "pattern": "sharing",
-      "weight": 0.00009094009321359562,
+      "weight": 0.00017734696735687241,
       "avgEngagement": 1.5,
       "count": 2,
       "examples": [
@@ -59,7 +59,7 @@
     },
     {
       "pattern": "novelty",
-      "weight": 0.007769144017418741,
+      "weight": 0.007380686816547804,
       "avgEngagement": 0,
       "count": 2,
       "examples": [
@@ -71,37 +71,37 @@
   "topHashtags": [
     {
       "tag": "#個人事業主",
-      "weight": 0.9236272258308753,
+      "weight": 0.9274458645393315,
       "frequency": 0.024390243902439025,
       "count": 1
     },
     {
       "tag": "#中小企業支援",
-      "weight": 0.5392271830288635,
+      "weight": 0.5390702931511634,
       "frequency": 0.024390243902439025,
       "count": 1
     },
     {
       "tag": "#中小企業",
-      "weight": 0.5008237416557288,
+      "weight": 0.5007825545729424,
       "frequency": 0.04878048780487805,
       "count": 2
     },
     {
       "tag": "#開業医",
-      "weight": 0.37896499816034346,
+      "weight": 0.3788547370791419,
       "frequency": 0.024390243902439025,
       "count": 1
     },
     {
       "tag": "#クリニック開業",
-      "weight": 0.37896499816034346,
+      "weight": 0.3788547370791419,
       "frequency": 0.024390243902439025,
       "count": 1
     },
     {
       "tag": "#補助金",
-      "weight": 0.3200995920786251,
+      "weight": 0.3200350221581203,
       "frequency": 0.14634146341463414,
       "count": 6
     },
