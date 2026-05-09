@@ -4854,5 +4854,84 @@
       "analyzedCount": 5
     },
     "summary": "最も効果的なフック: その他（重み0.91）。2位: 損失回避系（「知らないと損」）（重み0.90）。推奨ハッシュタグ: #個人事業主 #中小企業支援 #中小企業。自アカウント平均いいね: 1.6"
+  },
+  {
+    "date": "2026-05-09T21:52:32.521Z",
+    "sources": {
+      "webSearch": 0,
+      "seeds": 10,
+      "ownApi": 20,
+      "search": 0,
+      "history": 31,
+      "total": 42
+    },
+    "hookRanking": [
+      {
+        "pattern": "other",
+        "weight": 0.92,
+        "count": 17,
+        "example": "こちらの補助金、要件が更新されてました。"
+      },
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.9,
+        "count": 3,
+        "example": "もう0日切ってる。これ気づいてない人、絶対損してる。"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.66,
+        "count": 7,
+        "example": "9,000万円って大きい金額だけど、あと17日で締切。動くか今決めて。"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.6,
+        "count": 11,
+        "example": "「補助上限7,200万円」の制度、知ってる人だけ得してる。"
+      },
+      {
+        "pattern": "sharing",
+        "weight": 0,
+        "count": 2,
+        "example": "前に紹介した補助金、内容追記があったので共有。"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#個人事業主",
+        "weight": 0.93
+      },
+      {
+        "tag": "#中小企業支援",
+        "weight": 0.54
+      },
+      {
+        "tag": "#中小企業",
+        "weight": 0.5
+      },
+      {
+        "tag": "#開業医",
+        "weight": 0.38
+      },
+      {
+        "tag": "#クリニック開業",
+        "weight": 0.38
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        5,
+        6
+      ],
+      "ctaRate": 40
+    },
+    "ownPerformance": {
+      "bestTweetId": "2051876300881617279",
+      "bestTweetLikes": 3,
+      "avgLikes": 1.6,
+      "analyzedCount": 5
+    },
+    "summary": "最も効果的なフック: その他（重み0.92）。2位: 損失回避系（「知らないと損」）（重み0.90）。推奨ハッシュタグ: #個人事業主 #中小企業支援 #中小企業。自アカウント平均いいね: 1.6"
   }
 ]
