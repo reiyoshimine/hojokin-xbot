@@ -21065,5 +21065,79 @@
     },
     "ownPerformance": null,
     "summary": "最も効果的なフック: その他（重み1.00）。2位: 損失回避系（「知らないと損」）（重み0.90）。推奨ハッシュタグ: #個人事業主 #中小企業支援 #中小企業"
+  },
+  {
+    "date": "2026-08-28T20:27:16.216Z",
+    "sources": {
+      "webSearch": 0,
+      "seeds": 10,
+      "ownApi": 0,
+      "search": 0,
+      "history": 32,
+      "total": 42
+    },
+    "hookRanking": [
+      {
+        "pattern": "other",
+        "weight": 1,
+        "count": 16,
+        "example": "補助金の申請、自分でやろうとして挫折した人に朗報。"
+      },
+      {
+        "pattern": "loss_aversion",
+        "weight": 0.9,
+        "count": 3,
+        "example": "知らないと損する補助金まとめ"
+      },
+      {
+        "pattern": "urgency",
+        "weight": 0.67,
+        "count": 7,
+        "example": "あと3日で締切なのに、まだ知らない人がいるらしい。"
+      },
+      {
+        "pattern": "amount",
+        "weight": 0.53,
+        "count": 11,
+        "example": "補助金で200万円もらえるのに、知らないってだけで自腹切ってる人が多すぎる。"
+      },
+      {
+        "pattern": "novelty",
+        "weight": 0,
+        "count": 2,
+        "example": "新しく出てきた一件、これは結構良さそう。"
+      }
+    ],
+    "topHashtags": [
+      {
+        "tag": "#個人事業主",
+        "weight": 1
+      },
+      {
+        "tag": "#中小企業支援",
+        "weight": 0.54
+      },
+      {
+        "tag": "#中小企業",
+        "weight": 0.5
+      },
+      {
+        "tag": "#開業医",
+        "weight": 0.38
+      },
+      {
+        "tag": "#クリニック開業",
+        "weight": 0.38
+      }
+    ],
+    "structure": {
+      "optimalLines": [
+        5,
+        6
+      ],
+      "ctaRate": 40
+    },
+    "ownPerformance": null,
+    "summary": "最も効果的なフック: その他（重み1.00）。2位: 損失回避系（「知らないと損」）（重み0.90）。推奨ハッシュタグ: #個人事業主 #中小企業支援 #中小企業"
   }
 ]
