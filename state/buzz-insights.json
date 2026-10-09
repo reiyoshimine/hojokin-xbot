@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "lastUpdated": "2026-10-09T01:05:01.889Z",
-  "sampleSize": 14910,
+  "lastUpdated": "2026-10-09T15:37:26.042Z",
+  "sampleSize": 14952,
   "topHookPatterns": [
     {
       "pattern": "other",
-      "weight": 0.9999999843104581,
+      "weight": 0.9999999850949353,
       "avgEngagement": 824.21875,
       "count": 16,
       "examples": [
@@ -16,7 +16,7 @@
     },
     {
       "pattern": "loss_aversion",
-      "weight": 0.9048973136302845,
+      "weight": 0.9048973136675695,
       "avgEngagement": 745.8333333333334,
       "count": 3,
       "examples": [
@@ -27,7 +27,7 @@
     },
     {
       "pattern": "urgency",
-      "weight": 0.6733649268050295,
+      "weight": 0.6733649269102757,
       "avgEngagement": 555,
       "count": 7,
       "examples": [
@@ -38,7 +38,7 @@
     },
     {
       "pattern": "amount",
-      "weight": 0.5348866987113651,
+      "weight": 0.534886698114444,
       "avgEngagement": 440.8636363636364,
       "count": 11,
       "examples": [
@@ -49,7 +49,7 @@
     },
     {
       "pattern": "novelty",
-      "weight": 1.2475925858501273e-9,
+      "weight": 1.185212956557621e-9,
       "avgEngagement": 0,
       "count": 2,
       "examples": [
@@ -59,7 +59,7 @@
     },
     {
       "pattern": "sharing",
-      "weight": 6.52594616298016e-11,
+      "weight": 6.199648854831151e-11,
       "avgEngagement": 0,
       "count": 3,
       "examples": [
@@ -72,37 +72,37 @@
   "topHashtags": [
     {
       "tag": "#個人事業主",
-      "weight": 0.9999999877358294,
+      "weight": 0.9999999883490379,
       "frequency": 0.023809523809523808,
       "count": 1
     },
     {
       "tag": "#中小企業支援",
-      "weight": 0.536089385978737,
+      "weight": 0.5360893859535432,
       "frequency": 0.023809523809523808,
       "count": 1
     },
     {
       "tag": "#中小企業",
-      "weight": 0.5000000001322791,
+      "weight": 0.5000000001256651,
       "frequency": 0.047619047619047616,
       "count": 2
     },
     {
       "tag": "#開業医",
-      "weight": 0.3767597768904337,
+      "weight": 0.37675977687272766,
       "frequency": 0.023809523809523808,
       "count": 1
     },
     {
       "tag": "#クリニック開業",
-      "weight": 0.3767597768904337,
+      "weight": 0.37675977687272766,
       "frequency": 0.023809523809523808,
       "count": 1
     },
     {
       "tag": "#補助金",
-      "weight": 0.3188081938759057,
+      "weight": 0.3188081938655369,
       "frequency": 0.14285714285714285,
       "count": 6
     },
